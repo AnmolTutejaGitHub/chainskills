@@ -1,94 +1,176 @@
-import { ArrowRight } from "lucide-react";
-import { BackgroundLines } from "../components/ui/background-lines";
+import { useState } from "react";
+import { ArrowRight, X, Wallet, Info, Layers, Users } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { Wallet } from "lucide-react";
+import { ethers } from "ethers";
 
 export default function Home() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [userType, setUserType] = useState("freelancer");
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState(null);
+
+  const togglePopup = () => setIsOpen(!isOpen);
+
+  const connectWallet = async () => {
+    setError(null);
+
+    if (window.ethereum) {
+      setIsConnecting(true);
+
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        const seletedAccount = accounts[0];
+        console.log(`Connected as ${userType}:`, seletedAccount);
+        console.log(seletedAccount, " seletedAccount");
+      } catch (error) {
+        console.error('Error with Connection:', error);
+      } finally {
+        setIsConnecting(false);
+      }
+
+      setTimeout(() => {
+        if (userType === "client") {
+          window.location.href = "/onboarding/client";
+        } else if (userType === "freelancer") {
+          window.location.href = "/onboarding/freelancer";
+        }
+      }, 1000);
+    } else {
+      setError("Failed to connect wallet. Please make sure MetaMask is installed and try again.");
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen  bg-radial-[at_50%_40%] from-[#22c55e] via-[#000000, opacity 50%] to-[#000000] to-50%">
-      <header className="border-b">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-          <div className="flex items-center gap-2">
-            <a className="relative group" href="/">
-              <div className="absolute -inset-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg blur-lg group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-              </div>
-              <span className="relative text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text" tabindex="0">ChainSkills</span>
+    <div className="flex flex-col min-h-screen bg-black text-white">
+      <header
+        className={`fixed top-0 w-full z-50 bg-black bg-opacity-60 shadow-lg transition-all duration-300`}
+      >
+        <div className="container flex h-24 items-center justify-between px-6 md:px-10">
+          <div className="flex items-center gap-3">
+            <a href="/" className="relative group flex items-center gap-2">
+              <Layers className="text-emerald-500 h-6 w-6" />
+              <span className="relative text-4xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-600 text-transparent bg-clip-text">
+                ChainSkills
+              </span>
             </a>
           </div>
-          <nav className="hidden md:flex gap-6 text-[#6b7280]">
+
+          <nav className="hidden md:flex gap-8 text-gray-400">
             <a
               href="#features"
-              className="text-sm font-medium hover:underline underline-offset-4"
+              className="text-md flex items-center gap-1 font-medium hover:text-emerald-400 transition-colors"
             >
-              Features
+              <Info className="h-4 w-4" /> Features
             </a>
             <a
               href="#how-it-works"
-              className="text-sm font-medium hover:underline underline-offset-4"
+              className="text-md flex items-center gap-1 font-medium hover:text-emerald-400 transition-colors"
             >
-              How It Works
+              <Users className="h-4 w-4" /> How It Works
             </a>
             <a
               href="#testimonials"
-              className="text-sm font-medium hover:underline underline-offset-4"
+              className="text-md flex items-center gap-1 font-medium hover:text-emerald-400 transition-colors"
             >
-              Testimonials
+              <Layers className="h-4 w-4" /> Testimonials
             </a>
           </nav>
-          <div className="flex items-center gap-4 bg-black text-white p-2 rounded-lg ">
-            <a href="/auth">
-              <Button className="flex gap-2 bg-[#1DC167] p-2 text-black hover:bg-[#1DC169] cursor-pointer"><Wallet /> Connect Wallet</Button>
-            </a>
+
+          <div className="flex items-center gap-4">
+
+            <Button onClick={togglePopup} className="flex items-center gap-2 bg-emerald-500 text-black hover:bg-emerald-600 p-3 rounded-lg cursor-pointer text-lg">
+              <Wallet className="h-5 w-5" /> Connect Wallet
+            </Button>
+
+            {isOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+                <div className="bg-gray-900 rounded-2xl shadow-lg p-6 w-full max-w-md">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold text-emerald-400">Connect Your Wallet</h2>
+                    <button
+                      onClick={togglePopup}
+                      className="text-gray-400 hover:text-white focus:outline-none"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                  <p className="text-gray-400 mb-6">
+                    Use MetaMask to connect to ChainSkills as a freelancer.</p>
+                  <div className="flex flex-col gap-4">
+                    <Button
+                      onClick={connectWallet}
+                      disabled={isConnecting}
+                      className="bg-emerald-500 text-black hover:bg-emerald-600 p-3 rounded-lg flex items-center justify-between"
+                    >
+                      <span>{isConnecting ? "Connecting..." : "Connect with MetaMask"}</span>
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                        alt="MetaMask"
+                        className="h-6 w-6"
+                      />
+                    </Button>
+
+                    {error && (
+                      <div className="mt-4 p-3 text-sm bg-red-100 text-red-600 rounded-md">
+                        {error}
+                      </div>
+                    )}
+
+                    <div className="text-center text-sm text-gray-400 mt-4">
+                      By connecting your wallet, you agree to our <a href="/terms" className="underline">Terms of Service</a> and <a href="/privacy" className="underline">Privacy Policy</a>.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-primary/10 to-background">
+        <section className="px-10 mt-20 w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-black via-gray-900 to-black">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-[#4ade80]">
+                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl text-emerald-400">
                     Decentralized Freelancing for the Web3 Era
                   </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl text-[#d1d5db]">
-                    Connect, collaborate, and get rewarded with cryptocurrency
-                    and NFT certifications. Secure, transparent, and
-                    decentralized.
+                  <p className="max-w-[600px] text-gray-400 md:text-xl">
+                    Connect, collaborate, and get rewarded with cryptocurrency and NFT certifications. Secure,
+                    transparent, and decentralized.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <a href="/auth?type=freelancer">
-                    <button
-                      size="lg"
-                      className="rounded-lg cursor-pointer w-[200px] px-4 py-2 font-medium text-lg border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-green-100 duration-300"
-                    >
+                  <div>
+                    <Button onClick={() => {
+                      setUserType("freelancer");
+                      togglePopup();
+                    }} size="lg" className="w-full bg-emerald-500 text-black text-lg hover:bg-emerald-600">
                       Join as Freelancer
-                      <ArrowRight className="ml-8 h-4 w-4" />
-                    </button>
-                  </a>
-                  <a href="/auth?type=client">
-                    <button
-                      size="lg"
-                      variant="outline"
-                      className="ml-8 rounded-lg cursor-pointer w-32 px-4 py-2 text-lg font-medium border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-green-100 duration-300"
-                    >
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div>
+                    <Button onClick={() => {
+                      setUserType("client");
+                      togglePopup()
+                    }} size="lg" variant="outline" className="w-full bg-emerald-500 text-black text-lg hover:bg-emerald-600">
                       Hire Talent
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </button>
-                  </a>
+                    </Button>
+                  </div>
                 </div>
               </div>
-              <div className="flex relative justify-center">
-                <div className="relative w-full max-w-[500px] h-[300px] rounded-xl bg-gradient-to-br from-[#000000] to-[#000000]-foreground/20 p-1">
-                  <BackgroundLines className="flex items-center justify-center rounded-lg h-full w-full flex-col px-4">
-                    <div className="absolute inset-0 flex items-center justify-center text-white">
-                      <div className="text-center text-[#22c55e]">
-                        <div className="text-4xl font-bold mb-2">Web3</div>
-                        <div className="text-xl">Freelancing Revolution</div>
-                      </div>
+              <div className="flex justify-center">
+                <div className="relative w-full max-w-[500px] aspect-video rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-800 p-1">
+                  <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <div className="text-center">
+                      <div className="text-4xl font-bold mb-2">Web3</div>
+                      <div className="text-xl">Freelancing Revolution</div>
                     </div>
-                  </BackgroundLines>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,19 +180,16 @@ export default function Home() {
         <section id="features" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2 text-[#4ade80]">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl ">
-                  Platform Features
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  ChainSkills combines the best of Web3 with freelancing to
-                  create a revolutionary platform
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-emerald-400">Platform Features</h2>
+                <p className="max-w-[900px] text-gray-400 md:text-xl">
+                  ChainSkills combines the best of Web3 with freelancing to create a revolutionary platform
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-12 mt-8 text-[#4ade80]">
-              <div className="flex flex-col items-center space-y-2 border rounded-lg p-4">
-                <div className="rounded-full bg-primary/10 p-3">
+            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-12 mt-8">
+              <div className="flex flex-col items-center space-y-2 border border-emerald-500 rounded-lg p-4">
+                <div className="rounded-full bg-emerald-500/10 p-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -121,19 +200,18 @@ export default function Home() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-6 w-6 text-primary"
+                    className="h-6 w-6 text-emerald-400"
                   >
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold">Secure Payments</h3>
-                <p className="text-sm text-muted-foreground text-center text-[#6b7280]">
-                  Smart contracts ensure secure and transparent payments for
-                  completed work
+                <h3 className="text-xl font-bold text-emerald-400">Secure Payments</h3>
+                <p className="text-sm text-gray-400 text-center">
+                  Smart contracts ensure secure and transparent payments for completed work
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-2 border rounded-lg p-4">
-                <div className="rounded-full bg-primary/10 p-3">
+              <div className="flex flex-col items-center space-y-2 border border-emerald-500 rounded-lg p-4">
+                <div className="rounded-full bg-emerald-500/10 p-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -144,20 +222,19 @@ export default function Home() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-6 w-6 text-primary"
+                    className="h-6 w-6 text-emerald-400"
                   >
                     <path d="M12.5 2h-1V1h1zm0 21h-1v-1h1zm9.5-10.5v-1h1v1zM2 11.5v-1h1v1zM4.929 4.929l-.707-.707.707-.707.707.707zm14.142 0l.707-.707.707.707-.707.707zM4.929 19.071l-.707.707.707.707.707-.707zm14.142 0l.707.707.707-.707-.707-.707z" />
                     <circle cx="12" cy="12" r="4" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold">NFT Certifications</h3>
-                <p className="text-sm text-muted-foreground text-center text-[#6b7280]">
-                  Earn verifiable NFT certificates that showcase your skills and
-                  completed projects
+                <h3 className="text-xl font-bold text-emerald-400">NFT Certifications</h3>
+                <p className="text-sm text-gray-400 text-center">
+                  Earn verifiable NFT certificates that showcase your skills and completed projects
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-2 border rounded-lg p-4">
-                <div className="rounded-full bg-primary/10 p-3">
+              <div className="flex flex-col items-center space-y-2 border border-emerald-500 rounded-lg p-4">
+                <div className="rounded-full bg-emerald-500/10 p-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -168,7 +245,7 @@ export default function Home() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-6 w-6 text-primary"
+                    className="h-6 w-6 text-emerald-400"
                   >
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
@@ -176,37 +253,60 @@ export default function Home() {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold">Global Talent Pool</h3>
-                <p className="text-sm text-muted-foreground text-center text-[#6b7280]">
-                  Connect with skilled professionals from around the world in a
-                  decentralized ecosystem
+                <h3 className="text-xl font-bold text-emerald-400">Global Talent Pool</h3>
+                <p className="text-sm text-gray-400 text-center">
+                  Connect with skilled professionals from around the world in a decentralized ecosystem
                 </p>
               </div>
             </div>
           </div>
         </section>
-      </main>
-      <footer className="border-t py-6 md:py-0 text-[#6b7280]">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            © 2025 ChainSkills. All rights reserved.
-          </p>
-          <div className="flex gap-4">
-            <a
-              href="#"
-              className="text-sm text-muted-foreground hover:underline underline-offset-4"
-            >
-              Terms of Service
-            </a>
-            <a
-              href="#"
-              className="text-sm text-muted-foreground hover:underline underline-offset-4"
-            >
-              Privacy Policy
-            </a>
+
+        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-gray-900">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-emerald-400">
+                  How It Works
+                </h2>
+                <p className="max-w-[900px] text-gray-400 md:text-xl">
+                  Experience a seamless journey in Web3 freelancing with these simple steps.
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+              <div className="flex flex-col items-center space-y-4 text-center">
+                <div className="rounded-full bg-emerald-500/10 p-4">
+                  <Users className="text-emerald-400 h-12 w-12" />
+                </div>
+                <h3 className="text-xl font-bold text-emerald-400">Sign Up</h3>
+                <p className="text-gray-400">
+                  Register as a freelancer or client and start your journey in the decentralized ecosystem.
+                </p>
+              </div>
+              <div className="flex flex-col items-center space-y-4 text-center">
+                <div className="rounded-full bg-emerald-500/10 p-4">
+                  <Info className="text-emerald-400 h-12 w-12" />
+                </div>
+                <h3 className="text-xl font-bold text-emerald-400">Post & Bid</h3>
+                <p className="text-gray-400">
+                  Clients post projects, freelancers place bids, and smart contracts manage everything securely.
+                </p>
+              </div>
+              <div className="flex flex-col items-center space-y-4 text-center">
+                <div className="rounded-full bg-emerald-500/10 p-4">
+                  <Layers className="text-emerald-400 h-12 w-12" />
+                </div>
+                <h3 className="text-xl font-bold text-emerald-400">Deliver & Earn</h3>
+                <p className="text-gray-400">
+                  Deliver quality work, get paid in cryptocurrency, and earn NFT certifications for completed projects.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </footer>
+        </section>
+
+      </main>
     </div>
-  );
+  )
 }

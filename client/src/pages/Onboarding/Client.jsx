@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { Layers } from "lucide-react";
 // import { useRouter } from "next/navigation";
 
 export default function ClientOnboarding() {
-//   const router = useRouter();
+  //   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -25,7 +26,7 @@ export default function ClientOnboarding() {
 
     try {
       // await saveClientProfile(formData);
-    //   router.push("/dashboard/client");
+      //   router.push("/dashboard/client");
     } catch (error) {
       console.error("Error saving profile:", error);
     } finally {
@@ -34,9 +35,18 @@ export default function ClientOnboarding() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black">
+      <div className="flex items-center gap-3">
+        <a href="/" className="relative group flex items-center gap-2">
+          <Layers className="text-emerald-500 h-6 w-6" />
+          <span className="relative text-4xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-600 text-transparent bg-clip-text">
+            ChainSkills
+          </span>
+        </a>
+      </div>
+
       <div className="container max-w-3xl w-full p-8 text-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-2 text-[#22c55e]">Complete Your Client Profile</h1>
+        <h1 className="text-2xl font-bold mb-2 text-emerald-400">Complete Your Client Profile</h1>
         <p className="text-gray-200 mb-6">
           Tell us about your company to start hiring talent on ChainSkills
         </p>
@@ -50,7 +60,7 @@ export default function ClientOnboarding() {
                 <input
                   id="companyName"
                   name="companyName"
-                  placeholder="Acme Inc."
+                  placeholder="Google Inc."
                   value={formData.companyName}
                   onChange={handleChange}
                   required
@@ -65,7 +75,7 @@ export default function ClientOnboarding() {
                   id="companyEmail"
                   name="companyEmail"
                   type="email"
-                  placeholder="contact@acme.com"
+                  placeholder="contact@google.com"
                   value={formData.companyEmail}
                   onChange={handleChange}
                   required
@@ -83,7 +93,7 @@ export default function ClientOnboarding() {
                   id="website"
                   name="website"
                   type="url"
-                  placeholder="https://acme.com"
+                  placeholder="https://google.com"
                   value={formData.website}
                   onChange={handleChange}
                   className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm"
@@ -122,11 +132,11 @@ export default function ClientOnboarding() {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-center">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2 text-white bg-[#a4de80] rounded-md hover:bg-[#22c55e] focus:outline-none focus:ring-2 focus:ring-[#22c55e] transform transition-transform duration-300"
+              className="px-6 py-2 text-white bg-emerald-700 rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-700 transform transition-transform duration-300"
             >
               {isSubmitting ? "Saving..." : "Complete Profile"}
             </button>

@@ -1,10 +1,40 @@
 import { useState } from "react";
+import { Layers } from "lucide-react";
+
 
 const TIMEZONE_OPTIONS = [
-  { label: "UTC-12:00", value: "UTC-12:00" },
-  { label: "UTC+00:00", value: "UTC+00:00" },
-  { label: "UTC+05:30", value: "UTC+05:30" },
-  { label: "UTC+12:00", value: "UTC+12:00" },
+  { label: "(UTC-12:00) International Date Line West", value: "UTC-12:00" },
+  { label: "(UTC-11:00) Coordinated Universal Time-11", value: "UTC-11:00" },
+  { label: "(UTC-10:00) Hawaii", value: "UTC-10:00" },
+  { label: "(UTC-09:00) Alaska", value: "UTC-09:00" },
+  { label: "(UTC-08:00) Pacific Time (US & Canada)", value: "UTC-08:00" },
+  { label: "(UTC-07:00) Mountain Time (US & Canada)", value: "UTC-07:00" },
+  { label: "(UTC-06:00) Central Time (US & Canada)", value: "UTC-06:00" },
+  { label: "(UTC-05:00) Eastern Time (US & Canada)", value: "UTC-05:00" },
+  { label: "(UTC-04:00) Atlantic Time (Canada)", value: "UTC-04:00" },
+  { label: "(UTC-03:30) Newfoundland", value: "UTC-03:30" },
+  { label: "(UTC-03:00) Buenos Aires", value: "UTC-03:00" },
+  { label: "(UTC-02:00) Mid-Atlantic", value: "UTC-02:00" },
+  { label: "(UTC-01:00) Azores", value: "UTC-01:00" },
+  { label: "(UTC+00:00) Greenwich Mean Time", value: "UTC+00:00" },
+  { label: "(UTC+01:00) Central European Time", value: "UTC+01:00" },
+  { label: "(UTC+02:00) Eastern European Time", value: "UTC+02:00" },
+  { label: "(UTC+03:00) Moscow", value: "UTC+03:00" },
+  { label: "(UTC+03:30) Tehran", value: "UTC+03:30" },
+  { label: "(UTC+04:00) Abu Dhabi", value: "UTC+04:00" },
+  { label: "(UTC+04:30) Kabul", value: "UTC+04:30" },
+  { label: "(UTC+05:00) Islamabad", value: "UTC+05:00" },
+  { label: "(UTC+05:30) India Standard Time", value: "UTC+05:30" },
+  { label: "(UTC+05:45) Kathmandu", value: "UTC+05:45" },
+  { label: "(UTC+06:00) Dhaka", value: "UTC+06:00" },
+  { label: "(UTC+07:00) Bangkok", value: "UTC+07:00" },
+  { label: "(UTC+08:00) Singapore", value: "UTC+08:00" },
+  { label: "(UTC+09:00) Tokyo", value: "UTC+09:00" },
+  { label: "(UTC+09:30) Adelaide", value: "UTC+09:30" },
+  { label: "(UTC+10:00) Sydney", value: "UTC+10:00" },
+  { label: "(UTC+11:00) Magadan", value: "UTC+11:00" },
+  { label: "(UTC+12:00) Auckland", value: "UTC+12:00" },
+  { label: "(UTC+13:00) Nuku'alofa", value: "UTC+13:00" },
 ];
 
 export default function FreelancerOnboarding() {
@@ -64,9 +94,19 @@ export default function FreelancerOnboarding() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black">
+
+      <div className="flex items-center gap-3">
+        <a href="/" className="relative group flex items-center gap-2">
+          <Layers className="text-emerald-500 h-6 w-6" />
+          <span className="relative text-4xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-600 text-transparent bg-clip-text">
+            ChainSkills
+          </span>
+        </a>
+      </div>
+
       <div className="container max-w-3xl w-full p-8 text-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-2 text-[#22c55e]">Complete Your Freelancer Profile</h1>
+        <h1 className="text-2xl font-bold mb-2 text-emerald-500">Complete Your Freelancer Profile</h1>
         <p className="text-gray-200 mb-6">
           Tell us about yourself and your skills to get started on ChainSkills
         </p>
@@ -152,7 +192,7 @@ export default function FreelancerOnboarding() {
                   className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <label htmlFor="timezone" className="block text-sm font-medium text-gray-200">
                   Timezone
@@ -192,11 +232,11 @@ export default function FreelancerOnboarding() {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-center">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2 text-white bg-[#a4de80] rounded-md hover:bg-[#22c55e] focus:outline-none focus:ring-2 focus:ring-[#22c55e] transform transition-transform duration-300"
+              className="px-6 py-2 text-white bg-emerald-700 rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-700 transform transition-transform duration-300"
             >
               {isSubmitting ? "Saving..." : "Complete Profile"}
             </button>
