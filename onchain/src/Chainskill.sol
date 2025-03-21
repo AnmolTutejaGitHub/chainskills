@@ -14,9 +14,7 @@ contract Chainskill{
     error DevProfileDoesNotExist();
     error DevAddrGivenDidnotAppliedToThisListing();
     error ListingIsClosed();
-    error CanNotListOpeningInBackDate();
-    error EndDateIsWrong();
-    error ListingTimeEnded();
+    error UnAuthorisedAccess();
 
     struct Dev{
         address addr;
@@ -89,6 +87,10 @@ contract Chainskill{
             revert ProfileAlreadyExists();
         }
 
+        if(msg.sender!=addr){
+            revert UnAuthorisedAccess();
+        }
+
         if(bytes(name).length == 0 || bytes(email).length == 0) {
             revert FieldsCanNotBeEmpty();
         }   
@@ -111,6 +113,10 @@ contract Chainskill{
             revert ProfileAlreadyExists();
         }
 
+        if(msg.sender!=addr){
+            revert UnAuthorisedAccess();
+        }
+
         if(bytes(name).length == 0 || bytes(email).length == 0) {
             revert FieldsCanNotBeEmpty();
         } 
@@ -130,6 +136,10 @@ contract Chainskill{
 
     function addListing(uint256 uuid, address companyAddr , string memory topic, string memory description , string[] memory skillsReq,uint256 duration,uint256 budget) public {
 
+        if(msg.sender!=companyAddr){
+            revert UnAuthorisedAccess();
+        }
+
         if(CompanyMap[companyAddr].addr ==address(0)){
             revert CompanyIsNotRegistered();
         }
@@ -138,7 +148,7 @@ contract Chainskill{
             revert ProjectIdAlreadyExists();
         }
 
-        if(bytes(topic).length == 0 || bytes(description).length == 0) {
+        if(bytes(topic).length == 0 || bytes(description).length == 0 || duration<=0 || budget<=0) {
             revert FieldsCanNotBeEmpty();
         } 
 
@@ -163,11 +173,15 @@ contract Chainskill{
 
     function updateDev(address addr,string memory avail,string memory email,string[] memory skills,string memory name,string memory bio,uint256 hourlyRate) public {
 
+        if(msg.sender!=addr){
+            revert UnAuthorisedAccess();
+        }
+        
         if(DevMap[addr].addr==address(0)){
             revert ProfileDoesNotExist();
         }
 
-        if(bytes(email).length == 0) {
+        if(bytes(email).length == 0 || bytes(name).length==0 || hourlyRate<=0) {
             revert FieldsCanNotBeEmpty();
         }   
 
@@ -181,6 +195,9 @@ contract Chainskill{
     }
 
     function updateCompany(address addr,string memory name,string memory email,string memory industry , string memory description , string memory website) public {
+        if(msg.sender!=addr){
+            revert UnAuthorisedAccess();
+        }
 
         if(CompanyMap[addr].addr==address(0)){
             revert CompanyIsNotRegistered();
@@ -200,11 +217,15 @@ contract Chainskill{
 
     function applyToListing(uint256 projectID,address devAddr,uint256 charges,string memory coverLetter) public{
 
+        if(msg.sender!=devAddr){
+            revert UnAuthorisedAccess();
+        }
+
         if(DevMap[devAddr].addr==address(0)){
             revert ProfileDoesNotExist();
         }
 
-        if(projectIdToCompanyMap[projectID]!=address(0)){
+        if(projectIdToCompanyMap[projectID]==address(0)){
             revert ProjectIdDoesNotExists();
         }
 
@@ -227,6 +248,10 @@ contract Chainskill{
     }
 
     function selectBidder(uint256 projectID,address companyAddr , address devAddr,uint256 charges) public returns(string memory){
+
+        if(msg.sender!=companyAddr){
+            revert UnAuthorisedAccess();
+        }
 
         if(CompanyMap[companyAddr].addr==address(0)){
             revert CompanyIsNotRegistered();
@@ -286,6 +311,10 @@ contract Chainskill{
     }
 
     function MarkProjectCompleteAndPayDev(uint256 projectID,address companyAddr) public payable{
+        if(msg.sender!=companyAddr){
+            revert UnAuthorisedAccess();
+        }
+
         if(CompanyMap[companyAddr].addr==address(0)){
             revert CompanyIsNotRegistered();
         }
@@ -346,6 +375,5 @@ contract Chainskill{
     function getWhoBiddedForProject(uint256 projectId) public view returns(Applied[] memory){
         return DevAppliedProjectMapping[projectId];
     }
-
 
 }
