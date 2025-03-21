@@ -1,7 +1,11 @@
-import { Plus } from "lucide-react";
-import ClientJobList from "../../components/ClientJobList";
-import ClientApplications from "../../components/ClientApplications";
-import ClientActiveContracts from "../../components/ClientActiveContracts";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
+import { Plus } from "lucide-react"
+import ClientJobList from "../../components/ClientJobList"
+import ClientApplications from "../../components/ClientApplications"
+import ClientActiveContracts from "../../components/ClientActiveContracts"
 
 export default function ClientDashboard() {
   const clientProfile = {
@@ -10,71 +14,73 @@ export default function ClientDashboard() {
     jobsPosted: 8,
     activeContracts: 3,
     totalSpent: 12500,
-  };
+  }
 
   return (
     <div className="container py-6">
       <div className="grid gap-6 md:grid-cols-[1fr_3fr]">
         <div className="space-y-6">
-          <div className="border rounded-lg shadow p-4">
-            <div className="flex justify-between items-start pb-4">
-              <div className="h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjTHdnduUYB40YP8sC9rx1RFcQj2i7MLsUGg&s"
-                  alt={clientProfile.companyName}
-                  className="h-full w-full rounded-full object-cover"
-                />
+          <Card>
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src="/placeholder.svg?height=64&width=64" alt={clientProfile.companyName} />
+                  <AvatarFallback>{clientProfile.companyName.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <Button variant="outline" size="sm">
+                  Edit Profile
+                </Button>
               </div>
-              <button className="border px-2 py-1 rounded text-sm">Edit Profile</button>
-            </div>
-            <h2 className="text-lg font-bold mt-4">{clientProfile.companyName}</h2>
-            <p className="text-sm text-gray-600">{clientProfile.industry}</p>
-
-            <div className="mt-4 space-y-4">
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="space-y-1">
-                  <div className="text-sm text-gray-500">Jobs Posted</div>
-                  <div className="text-xl font-bold">{clientProfile.jobsPosted}</div>
+              <CardTitle className="mt-4">{clientProfile.companyName}</CardTitle>
+              <CardDescription>{clientProfile.industry}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="space-y-1">
+                    <div className="text-sm text-muted-foreground">Jobs Posted</div>
+                    <div className="text-xl font-bold">{clientProfile.jobsPosted}</div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-sm text-muted-foreground">Active Contracts</div>
+                    <div className="text-xl font-bold">{clientProfile.activeContracts}</div>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <div className="text-sm text-gray-500">Active Contracts</div>
-                  <div className="text-xl font-bold">{clientProfile.activeContracts}</div>
+
+                <div className="pt-2">
+                  <div className="text-sm text-muted-foreground">Total Spent</div>
+                  <div className="text-2xl font-bold">${clientProfile.totalSpent}</div>
                 </div>
-              </div>
 
-              <div className="pt-2">
-                <div className="text-sm text-gray-500">Total Spent</div>
-                <div className="text-2xl font-bold">${clientProfile.totalSpent}</div>
+                <a href="/dashboard/client/post-job">
+                  <Button className="w-full mt-2">
+                    <Plus className="mr-2 h-4 w-4" /> Post a New Job
+                  </Button>
+                </a>
               </div>
-
-              <a href="/dashboard/client/post-job">
-                <button className="w-full mt-2 bg-blue-500 text-white py-2 rounded flex items-center justify-center">
-                  <Plus className="mr-2 h-4 w-4" /> Post a New Job
-                </button>
-              </a>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="space-y-6">
-          <div>
-            <div className="grid w-full grid-cols-3 border-b">
-              <button className="pb-2 text-sm font-medium border-b-2 border-blue-500">My Job Listings</button>
-              <button className="pb-2 text-sm font-medium">Applications</button>
-              <button className="pb-2 text-sm font-medium">Active Contracts</button>
-            </div>
-            <div className="mt-4">
+          <Tabs defaultValue="jobs">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="jobs">My Job Listings</TabsTrigger>
+              <TabsTrigger value="applications">Applications</TabsTrigger>
+              <TabsTrigger value="contracts">Active Contracts</TabsTrigger>
+            </TabsList>
+            <TabsContent value="jobs" className="mt-4">
               <ClientJobList />
-            </div>
-            <div className="mt-4 hidden">
+            </TabsContent>
+            <TabsContent value="applications" className="mt-4">
               <ClientApplications />
-            </div>
-            <div className="mt-4 hidden">
+            </TabsContent>
+            <TabsContent value="contracts" className="mt-4">
               <ClientActiveContracts />
-            </div>
-          </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
-  );
+  )
 }
