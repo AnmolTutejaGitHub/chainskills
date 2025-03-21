@@ -4,6 +4,7 @@ import AuthPage from "./pages/Auth";
 import FreelancerOnboarding from "./pages/Onboarding/Freelancer";
 import ClientOnboarding from "./pages/Onboarding/Client";
 import ClientDashboard from "./pages/Dashboard/Client";
+import PostJobPage from "./pages/Dashboard/Client/PostJob";
 
 const Home = lazy(() => import("./pages/Home"));
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/onboarding/freelancer" element={<FreelancerOnboarding />} />
           <Route path="/onboarding/client" element={<ClientOnboarding />} />
           <Route path="/dashboard/client" element={<ClientDashboard />} />
+          <Route path="/dashboard/client/post-job" element={<PostJobPage />} />
         </Routes>
       {/* </Suspense> */}
     </BrowserRouter>

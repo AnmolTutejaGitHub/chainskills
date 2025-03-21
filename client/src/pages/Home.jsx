@@ -1,5 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { BackgroundLines } from "../components/ui/background-lines";
+import { Button } from "../components/ui/button";
+import { Wallet } from "lucide-react";
 
 export default function Home() {
   return (
@@ -7,9 +9,11 @@ export default function Home() {
       <header className="border-b">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-[#4ade80]">
-              ChainSkills
-            </span>
+            <a className="relative group" href="/">
+              <div className="absolute -inset-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg blur-lg group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+              </div>
+              <span className="relative text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text" tabindex="0">ChainSkills</span>
+            </a>
           </div>
           <nav className="hidden md:flex gap-6 text-[#6b7280]">
             <a
@@ -31,9 +35,9 @@ export default function Home() {
               Testimonials
             </a>
           </nav>
-          <div className="flex items-center gap-4 bg-black text-white p-2 rounded-lg">
+          <div className="flex items-center gap-4 bg-black text-white p-2 rounded-lg ">
             <a href="/auth">
-              <button>Connect Wallet</button>
+              <Button className="flex gap-2 bg-[#1DC167] p-2 text-black hover:bg-[#1DC169] cursor-pointer"><Wallet /> Connect Wallet</Button>
             </a>
           </div>
         </div>
@@ -55,16 +59,19 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <a href="/auth?type=freelancer">
-                    <button size="lg" className="w-full text-[#22c55e]">
+                    <button
+                      size="lg"
+                      className="rounded-lg cursor-pointer w-[200px] px-4 py-2 font-medium text-lg border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-green-100 duration-300"
+                    >
                       Join as Freelancer
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <ArrowRight className="ml-8 h-4 w-4" />
                     </button>
                   </a>
                   <a href="/auth?type=client">
                     <button
                       size="lg"
                       variant="outline"
-                      className="rounded-lg px-4 py-2 border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-green-100 duration-300"
+                      className="ml-8 rounded-lg cursor-pointer w-32 px-4 py-2 text-lg font-medium border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-green-100 duration-300"
                     >
                       Hire Talent
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -72,9 +79,9 @@ export default function Home() {
                   </a>
                 </div>
               </div>
-              <div className="flex relative justify-center  ">
-                <div className="relative w-full max-w-[500px] h-16 rounded-xl  min-h-[300px] h-auto bg-gradient-to-br from-[#4ade80] to-[#4ade80]-foreground/20 p-1">
-                  <BackgroundLines className="flex items-center justify-center h-full w-full flex-col px-4">
+              <div className="flex relative justify-center">
+                <div className="relative w-full max-w-[500px] h-[300px] rounded-xl bg-gradient-to-br from-[#000000] to-[#000000]-foreground/20 p-1">
+                  <BackgroundLines className="flex items-center justify-center rounded-lg h-full w-full flex-col px-4">
                     <div className="absolute inset-0 flex items-center justify-center text-white">
                       <div className="text-center text-[#22c55e]">
                         <div className="text-4xl font-bold mb-2">Web3</div>

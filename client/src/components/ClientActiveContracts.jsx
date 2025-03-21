@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 
 export default function ClientActiveContracts() {
@@ -7,7 +5,6 @@ export default function ClientActiveContracts() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate fetching contracts with demo data
     const demoContracts = [
       {
         id: "1",

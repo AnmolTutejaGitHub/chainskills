@@ -6,6 +6,7 @@ import { Plus } from "lucide-react"
 import ClientJobList from "../../components/ClientJobList"
 import ClientApplications from "../../components/ClientApplications"
 import ClientActiveContracts from "../../components/ClientActiveContracts"
+import Header from "../../components/dashboard/Header";
 
 export default function ClientDashboard() {
   const clientProfile = {
@@ -17,10 +18,11 @@ export default function ClientDashboard() {
   }
 
   return (
-    <div className="container py-6">
+    <div>
+      <Header />
       <div className="grid gap-6 md:grid-cols-[1fr_3fr]">
-        <div className="space-y-6">
-          <Card>
+        <div className="space-y-6 mt-10 bg-black">
+          <Card className="">
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <Avatar className="h-16 w-16">
