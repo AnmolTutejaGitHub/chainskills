@@ -290,7 +290,7 @@ contract Chainskill{
             if(allDevsThatApplied[i].devAddr==devAddr) {
                 allDevsThatApplied[i].status = DevApplicationStatus.ACCEPTED;
                 devApplied =true;
-                break;
+                //break;
             }else {
                 allDevsThatApplied[i].status = DevApplicationStatus.REJECTED;
             }

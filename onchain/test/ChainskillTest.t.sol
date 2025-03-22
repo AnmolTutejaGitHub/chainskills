@@ -339,4 +339,69 @@ contract ChainskillTest is Test{
       cs.getlistedProjectDetail(UUID, COMPANY);
       cs.getWhoBiddedForProject(UUID);
    }
+
+   function testMimicWorkflow() public RegisterCompany RegisterDev {
+      vm.prank(PLAYER_2);
+      cs.registerDev(PLAYER_2, EMAIL,NAME,skills,AVAIL, perHour , BIO);
+
+      vm.prank(COMPANY_2);
+      cs.registerCompany(COMPANY_2, NAME, EMAIL, INDUSTRY, WEBSITE, DESCRIPTION);
+
+      vm.prank(COMPANY);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+
+      vm.prank(COMPANY_2);
+      cs.addListing(1212,COMPANY_2,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+
+      vm.prank(PLAYER);
+      cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
+
+      vm.prank(PLAYER_2);
+      cs.applyToListing(UUID, PLAYER_2, CHARGES, COVER_LETTER);
+
+      vm.prank(PLAYER);
+      cs.applyToListing(1212, PLAYER, CHARGES, COVER_LETTER);
+
+      vm.prank(PLAYER_2);
+      cs.applyToListing(1212, PLAYER_2, CHARGES, COVER_LETTER);
+
+      vm.prank(COMPANY);
+      cs.selectBidder(UUID, COMPANY, PLAYER , CHARGES);
+
+      vm.prank(COMPANY_2);
+      cs.selectBidder(1212, COMPANY_2, PLAYER_2 , CHARGES);
+
+      uint256 status_1 = cs.getApplicationStatus(UUID, PLAYER);
+      uint256 status_2 = cs.getApplicationStatus(UUID, PLAYER_2);
+      uint256 status_3 = cs.getApplicationStatus(1212, PLAYER);
+      uint256 status_4 = cs.getApplicationStatus(1212, PLAYER_2);
+
+      cs.getDevAppliedProjects(PLAYER);
+      cs.getDevCompletedProjects(PLAYER);
+      cs.getDevInProgressProjects(PLAYER);
+
+      cs.getDevAppliedProjects(PLAYER_2);
+      cs.getDevCompletedProjects(PLAYER_2);
+      cs.getDevInProgressProjects(PLAYER_2);
+
+      cs.getCompanyListings(COMPANY);
+      cs.getCompanyListings(COMPANY_2);
+
+      cs.getCompanyProfile(COMPANY);
+      cs.getCompanyProfile(COMPANY_2);
+
+      cs.getDevProfileData(PLAYER);
+      cs.getDevProfileData(PLAYER_2);
+
+      cs.getlistedProjectDetail(UUID, COMPANY);
+      cs.getWhoBiddedForProject(UUID);
+
+      cs.getApplicationStatus(UUID, PLAYER);
+      cs.getApplicationStatus(UUID, PLAYER_2);
+
+      assert(status_1==1);
+      assert(status_2==2);
+      assert(status_3==2);
+      assert(status_4==1);
+   }
 }
