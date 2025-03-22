@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Layers } from "lucide-react";
 
-
 const TIMEZONE_OPTIONS = [
   { label: "(UTC-12:00) International Date Line West", value: "UTC-12:00" },
   { label: "(UTC-11:00) Coordinated Universal Time-11", value: "UTC-11:00" },

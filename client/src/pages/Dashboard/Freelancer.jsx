@@ -17,8 +17,8 @@ export default function FreelancerDashboard() {
     hourlyRate: 75,
     skills: ["JavaScript", "React", "Next.js", "TypeScript"],
     completedJobs: 12,
-    rating: 4.9,
-    earnings: 8750,
+    rating: 5,
+    earnings: 0,
     certifications: 5,
   }
 
@@ -45,7 +45,7 @@ export default function FreelancerDashboard() {
               <div className="space-y-4">
                 <div>
                   <div className="text-sm font-medium text-emerald-300">Hourly Rate</div>
-                  <div className="text-2xl font-bold text-white">${freelancerProfile.hourlyRate}</div>
+                  <div className="text-2xl font-bold text-white">ETH. {freelancerProfile.hourlyRate}</div>
                 </div>
 
                 <div>
@@ -80,30 +80,27 @@ export default function FreelancerDashboard() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    <div className="text-sm text-gray-300">UTC+01:00</div>
+                    <div className="text-sm text-gray-300">UTC+05:30</div>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-emerald-200 bg-black">
             <CardHeader>
-              <CardTitle className="text-lg">Earnings</CardTitle>
+              <CardTitle className="text-lg text-emerald-400">Earnings</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">${freelancerProfile.earnings}</div>
-              <p className="text-sm text-muted-foreground mt-1">Total earnings</p>
-              <Button className="w-full mt-4" variant="outline">
-                Withdraw
-              </Button>
+              <div className="text-3xl font-bold text-white">ETH. {freelancerProfile.earnings}</div>
+              <p className="text-sm text-emerald-400 mt-1 ">Total earnings</p>
             </CardContent>
           </Card>
         </div>
 
         <div className="space-y-6">
           <Tabs defaultValue="jobs">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-3 bg-emerald-200">
               <TabsTrigger value="jobs">Available Jobs</TabsTrigger>
               <TabsTrigger value="applications">My Applications</TabsTrigger>
               <TabsTrigger value="certifications">My Certifications</TabsTrigger>

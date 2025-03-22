@@ -84,10 +84,10 @@ export default function ClientApplications() {
     return (
         <div className="space-y-4">
             {applications.map((application) => (
-                <Card key={application.id}>
+                <Card key={application.id} className="bg-black border-gray-600">
                     <CardHeader className="pb-2">
                         <div className="flex justify-between items-start">
-                            <CardTitle>{application.jobTitle}</CardTitle>
+                            <CardTitle className="text-emerald-500 text-lg">{application.jobTitle}</CardTitle>
                             <Badge
                                 variant={
                                     application.status === "pending"
