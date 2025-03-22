@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Layers } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+import { saveFreelancerProfile } from "../../lib/freelancer"
 
-const TIMEZONE_OPTIONS = [
+const avail_OPTIONS = [
   { label: "(UTC-12:00) International Date Line West", value: "UTC-12:00" },
   { label: "(UTC-11:00) Coordinated Universal Time-11", value: "UTC-11:00" },
   { label: "(UTC-10:00) Hawaii", value: "UTC-10:00" },
@@ -39,14 +41,15 @@ const TIMEZONE_OPTIONS = [
 export default function FreelancerOnboarding() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     skills: [],
+    avail: "",
     hourlyRate: "",
-    timezone: "",
     bio: "",
   });
   const [skillInput, setSkillInput] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,9 +85,11 @@ export default function FreelancerOnboarding() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    console.log("I have clicked this button");
+
     try {
-      // await saveFreelancerProfile(formData);
-      // router.push("/dashboard/freelancer");
+      await saveFreelancerProfile(formData);
+      navigate('/dashboard/freelancer');
     } catch (error) {
       console.error("Error saving profile:", error);
     } finally {
@@ -113,14 +118,14 @@ export default function FreelancerOnboarding() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-200">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-200">
                   Full Name
                 </label>
                 <input
-                  id="fullName"
-                  name="fullName"
+                  id="name"
+                  name="name"
                   placeholder="John Doe"
-                  value={formData.fullName}
+                  value={formData.name}
                   onChange={handleChange}
                   required
                   className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm"
@@ -193,19 +198,19 @@ export default function FreelancerOnboarding() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="timezone" className="block text-sm font-medium text-gray-200">
-                  Timezone
+                <label htmlFor="avail" className="block text-sm font-medium text-gray-200">
+                  avail
                 </label>
                 <select
-                  value={formData.timezone}
+                  value={formData.avail}
                   onChange={(e) => handleChange(e)}
-                  name="timezone"
+                  name="avail"
                   className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm hover:border-green-400 bg-[#0f172a] transform transition-transform duration-200"
                 >
                   <option value="" disabled>
-                    Select your timezone
+                    Select your avail
                   </option>
-                  {TIMEZONE_OPTIONS.map((option) => (
+                  {avail_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>

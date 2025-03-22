@@ -103,7 +103,7 @@ contract Chainskill{
     address [] public companies;
     address [] public devs;
 
-   function registerDev(address addr,string memory email,string memory name,string[] memory skills,string memory avail,uint256 hourlyRate,string memory bio) public {
+   function registerDev(address addr, string memory name, string memory email, string[] memory skills, string memory avail, uint256 hourlyRate, string memory bio) public {
 
         if(DevMap[addr].addr!=address(0)){
             revert ProfileAlreadyExists();
@@ -132,7 +132,7 @@ contract Chainskill{
         devs.push(addr);
     }
 
-    function registerCompany(address addr,string memory name, string memory email,string memory industry,string memory website ,string memory description) public {
+    function registerCompany(address addr, string memory name, string memory email,string memory industry,string memory website ,string memory description) public {
 
         if(CompanyMap[addr].addr !=address(0)){
             revert ProfileAlreadyExists();
