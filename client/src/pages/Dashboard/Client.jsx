@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/ta
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { Button } from "../../components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
-import { Plus } from "lucide-react"
+import { Plus, MessageSquare } from "lucide-react"
 import ClientJobList from "../../components/ClientJobList"
 import ClientApplications from "../../components/ClientApplications"
 import ClientActiveContracts from "../../components/ClientActiveContracts"
@@ -14,11 +14,11 @@ export default function ClientDashboard() {
     industry: "Technology",
     jobsPosted: 8,
     activeContracts: 3,
-    totalSpent: 12500,
+    totalSpent: 563,
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-black">
       <Header />
       <div className="grid gap-6 md:grid-cols-[1fr_3fr] bg-black pt-10 px-10">
         <div className="space-y-6 mt-10 bg-black">
@@ -29,9 +29,11 @@ export default function ClientDashboard() {
                   <AvatarImage src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt={clientProfile.companyName} />
                   <AvatarFallback>{clientProfile.companyName.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <Button className="bg-emerald-400 border-0" variant="outline" size="sm">
-                  Edit Profile
-                </Button>
+                <a href="/dashboard/client/edit-profile">
+                  <Button className="bg-emerald-400 border-0 hover:bg-emerald-300 cursor-pointer" variant="outline" size="sm">
+                    Edit Profile
+                  </Button>
+                </a>
               </div>
               <CardTitle className="mt-4 text-emerald-300 text-2xl">{clientProfile.companyName}</CardTitle>
               <CardDescription className="text-gray-300">{clientProfile.industry}</CardDescription>
@@ -51,14 +53,22 @@ export default function ClientDashboard() {
 
                 <div className="pt-2">
                   <div className="text-sm text-emerald-300">Total Spent</div>
-                  <div className="text-2xl font-bold text-white">${clientProfile.totalSpent}</div>
+                  <div className="text-2xl font-bold text-white">ETH. {clientProfile.totalSpent}</div>
                 </div>
 
-                <a href="/dashboard/client/post-job">
-                  <Button className="w-full mt-2 bg-emerald-400 text-black hover:bg-emerald-300 cursor-pointer">
-                    <Plus className="mr-2 h-4 w-4" /> Post a New Job
-                  </Button>
-                </a>
+                <div className="grid grid-cols-2 gap-2">
+                  <a href="/dashboard/client/post-job">
+                    <Button className="w-full cursor-pointer">
+                      <Plus className="mr-2 h-4 w-4" /> Post Job
+                    </Button>
+                  </a>
+                  <a href="/dashboard/messages">
+                    <Button variant="outline" className="w-full gap-2 cursor-pointer">
+                      <MessageSquare className="h-4 w-4" />
+                      Messages
+                    </Button>
+                  </a>
+                </div>
               </div>
             </CardContent>
           </Card>

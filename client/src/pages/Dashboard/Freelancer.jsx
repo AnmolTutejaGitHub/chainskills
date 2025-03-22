@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Button } from "../../components/ui/button"
 import { Badge } from "../../components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
-import { Briefcase, Star, Award, Clock } from "lucide-react"
+import { Briefcase, Star, Award, Clock, MessageSquare } from "lucide-react"
 import Header from "../../components/dashboard/Header"
 import FreelancerJobList from "../../components/FreelancerJobList"
 import FreelancerApplications from "../../components/FreelancerApplications"
@@ -34,9 +34,11 @@ export default function FreelancerDashboard() {
                   <AvatarImage src="/placeholder.svg?height=64&width=64" alt={freelancerProfile.name} />
                   <AvatarFallback className="bg-emerald-200 text-xl font-semibold">{freelancerProfile.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <Button className="bg-emerald-400 border-0" variant="outline" size="sm">
+                <a href="/dashboard/freelancer/edit-profile">
+                <Button className="bg-emerald-400 border-0 hover:bg-emerald-300 cursor-pointer" variant="outline" size="sm">
                   Edit Profile
                 </Button>
+                </a>
               </div>
               <CardTitle className="mt-4 text-emerald-300 text-2xl">{freelancerProfile.name}</CardTitle>
               <CardDescription className="text-gray-300">{freelancerProfile.title}</CardDescription>
@@ -83,6 +85,13 @@ export default function FreelancerDashboard() {
                     <div className="text-sm text-gray-300">UTC+05:30</div>
                   </div>
                 </div>
+
+                <a href="/dashboard/messages">
+                  <Button variant="outline" className="w-full gap-2 cursor-pointer">
+                    <MessageSquare className="h-4 w-4" />
+                    Messages
+                  </Button>
+                </a>
               </div>
             </CardContent>
           </Card>
