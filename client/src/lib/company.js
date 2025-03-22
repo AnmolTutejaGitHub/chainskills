@@ -19,7 +19,9 @@ export async function saveCompanyProfile(profileData) {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const accounts = await provider.send("eth_requestAccounts", []);
     const addr = accounts[0];
-    const contract = new ethers.Contract(contractAddress, abi, addr);
+    const signer = await provider.getSigner();
+    console.log("Addr: ", addr, "Signer: ", signer);
+    const contract = new ethers.Contract(contractAddress, abi, signer);
 
     const tx = await contract.registerCompany(
       addr,

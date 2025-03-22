@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { Button } from "../../components/ui/button"
@@ -8,6 +9,7 @@ import Header from "../../components/dashboard/Header"
 import FreelancerJobList from "../../components/FreelancerJobList"
 import FreelancerApplications from "../../components/FreelancerApplications"
 import FreelancerCertifications from "../../components/FreelancerCertifications"
+import { getUserProfileData } from "../../lib/freelancer"
 
 export default function FreelancerDashboard() {
   // This would normally be fetched from an API
@@ -21,6 +23,10 @@ export default function FreelancerDashboard() {
     earnings: 0,
     certifications: 5,
   }
+
+  useEffect(() => {
+    getUserProfileData();
+  }, []);
 
   return (
     <div>

@@ -17,7 +17,9 @@ export async function saveFreelancerProfile(profileData) {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const accounts = await provider.send("eth_requestAccounts", []);
     const addr = accounts[0];
-    const contract = new ethers.Contract(contractAddress, abi, addr);
+    const signer = await provider.getSigner();
+    console.log("Addr: ", addr, "Signer: ", signer);
+    const contract = new ethers.Contract(contractAddress, abi, signer);
 
     const tx = await contract.registerDev(
     addr,
@@ -33,6 +35,28 @@ export async function saveFreelancerProfile(profileData) {
     await tx.wait();
 
     console.log("Freelancer profile saved successfully on blockchain and backend!");
+  } catch (error) {
+    console.error("Error saving freelancer profile:", error);
+    throw error;
+  }
+}
+
+export async function getUserProfileData() {
+  if (!window.ethereum) {
+    throw new Error("Ethereum provider is not available. Please install MetaMask.");
+  }
+
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const accounts = await provider.send("eth_requestAccounts", []);
+    const addr = accounts[0];
+    const signer = await provider.getSigner();
+    console.log("Addr: ", addr, "Signer: ", signer);
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+
+    const tx = await contract.getDevProfileData(addr);
+
+    console.log("User Data: ", tx);
   } catch (error) {
     console.error("Error saving freelancer profile:", error);
     throw error;
