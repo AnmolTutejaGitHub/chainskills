@@ -71,11 +71,11 @@ export default function FreelancerApplications() {
   return (
     <div className="space-y-4">
       {applications.map((application) => (
-        <Card key={application.id}>
+        <Card key={application.id} className="bg-black border-gray-600">
           <CardHeader className="pb-2">
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle>{application.jobTitle}</CardTitle>
+                <CardTitle className="text-emerald-500 text-lg">{application.jobTitle}</CardTitle>
                 <CardDescription>{application.companyName}</CardDescription>
               </div>
               <Badge
@@ -94,16 +94,16 @@ export default function FreelancerApplications() {
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Applied on:</span>
-                <span>{application.appliedAt}</span>
+                <span className="text-emerald-500">Applied on:</span>
+                <span className="text-gray-200">{application.appliedAt}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Proposed rate:</span>
-                <span>${application.proposedRate}/hr</span>
+                <span className="text-emerald-500">Proposed rate:</span>
+                <span className="text-gray-200">${application.proposedRate}/hr</span>
               </div>
               <div className="pt-2">
-                <div className="text-sm font-medium mb-1">Cover Letter:</div>
-                <p className="text-sm line-clamp-3">{application.coverLetter}</p>
+                <div className="text-sm text-emerald-500 font-medium mb-1">Cover Letter:</div>
+                <p className="text-sm line-clamp-3 text-gray-200">{application.coverLetter}</p>
               </div>
             </div>
           </CardContent>

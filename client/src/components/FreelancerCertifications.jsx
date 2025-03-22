@@ -72,14 +72,14 @@ export default function FreelancerCertifications() {
   return (
     <div className="space-y-4">
       {certifications.map((certification) => (
-        <Card key={certification.id}>
+        <Card key={certification.id} className="bg-black border-gray-600">
           <CardHeader className="pb-2">
             <div className="flex items-start gap-4">
-              <div className="rounded-full bg-primary/10 p-3">
+              <div className="rounded-full bg-emerald-300 p-3">
                 <Award className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <CardTitle>{certification.title}</CardTitle>
+                <CardTitle className="text-emerald-500 text-lg">{certification.title}</CardTitle>
                 <CardDescription>
                   Issued by {certification.issuer} on {certification.issuedAt}
                 </CardDescription>
@@ -89,7 +89,7 @@ export default function FreelancerCertifications() {
           <CardContent>
             <div className="space-y-4">
               <div>
-                <div className="text-sm font-medium mb-2">Skills Certified</div>
+                <div className="text-sm font-medium mb-2 text-emerald-300">Skills Certified</div>
                 <div className="flex flex-wrap gap-2">
                   {certification.skills.map((skill) => (
                     <Badge key={skill} variant="secondary">
