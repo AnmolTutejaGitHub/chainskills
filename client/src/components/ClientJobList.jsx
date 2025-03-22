@@ -5,48 +5,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 
-// const mockAvailableJobs = [
-//     {
-//         id: "job1",
-//         title: "Smart Contract Developer for DeFi Project",
-//         companyName: "DeFi Innovations",
-//         description:
-//             "We're looking for an experienced Solidity developer to help build our decentralized finance platform. The ideal candidate will have experience with ERC-20 tokens, liquidity pools, and yield farming mechanisms.",
-//         skills: ["Solidity", "Smart Contracts", "DeFi", "Web3"],
-//         jobType: "fixed",
-//         budget: 5000,
-//         experienceLevel: "Expert",
-//         duration: "2 months",
-//         postedAt: "2 days ago",
-//     },
-//     {
-//         id: "job2",
-//         title: "Frontend Developer for NFT Marketplace",
-//         companyName: "CryptoArt Collective",
-//         description:
-//             "We need a React developer to build the frontend of our NFT marketplace. You'll be working with our design team to create a beautiful and intuitive user interface for browsing, buying, and selling NFTs.",
-//         skills: ["React", "JavaScript", "Web3", "UI/UX"],
-//         jobType: "hourly",
-//         budget: 50,
-//         experienceLevel: "Intermediate",
-//         duration: "3 months",
-//         postedAt: "1 week ago",
-//     },
-//     {
-//         id: "job3",
-//         title: "Blockchain Security Auditor",
-//         companyName: "SecureChain",
-//         description:
-//             "Looking for a security expert to audit our smart contracts before deployment. Must have experience with common vulnerabilities and attack vectors in blockchain applications.",
-//         skills: ["Security", "Solidity", "Smart Contracts", "Auditing"],
-//         jobType: "fixed",
-//         budget: 3000,
-//         experienceLevel: "Expert",
-//         duration: "2 weeks",
-//         postedAt: "3 days ago",
-//     },
-// ]
-
 const mockClientJobs = [
     {
         id: "job1",
