@@ -15,6 +15,8 @@ contract Chainskill{
     error DevAddrGivenDidnotAppliedToThisListing();
     error ListingIsClosed();
     error UnAuthorisedAccess();
+    error ProjectWasNotAssigned();
+    error RatingRangeOutOfBound();
 
     struct Dev{
         address addr;
@@ -24,6 +26,9 @@ contract Chainskill{
         string avail;
         uint256 hourlyRate;
         string bio;
+        uint256 rating;
+        uint256 peopleRated;
+        uint256 totalProjectsCompleted;
        // Listing [] completedProjects;
     }
 
@@ -46,11 +51,18 @@ contract Chainskill{
         EXPIRED
     }
 
+    enum DevApplicationStatus{
+        PENDING,
+        ACCEPTED,
+        REJECTED
+    }
+
     struct Applied{
         uint256 ListingUUID;
         address devAddr;
         uint256 charges;
         string coverLetter;
+        DevApplicationStatus status;
     }
 
     struct Listing{
@@ -74,6 +86,7 @@ contract Chainskill{
     mapping(address=> Listing[]) public CompanyListing;
     mapping(address=>Listing[]) public DevCompletedProjects;
     mapping(address=>Listing[]) public DevInProgressProjects;
+    mapping(address=>Listing[]) public DevTotalAppliedProjects;
     mapping(uint256=>Applied[]) public DevAppliedProjectMapping;
     mapping(uint256=>address) public projectIdToCompanyMap;
 
@@ -102,7 +115,10 @@ contract Chainskill{
             skills: skills,
             avail: avail,
             hourlyRate : hourlyRate,
-            bio : bio
+            bio : bio,
+            rating : 0,
+            peopleRated : 0,
+            totalProjectsCompleted : 0
         });
         devs.push(addr);
     }
@@ -234,6 +250,7 @@ contract Chainskill{
         for(uint256 i=0;i<listings.length;i++){
             if(listings[i].ListingUUID == projectID){
                 if(listings[i].status!=ListingStatus.OPEN) revert ListingIsClosed();
+                DevTotalAppliedProjects[devAddr].push(listings[i]);
             }
         }
 
@@ -242,7 +259,8 @@ contract Chainskill{
             ListingUUID : projectID,
             devAddr : devAddr,
             charges : charges,
-            coverLetter : coverLetter
+            coverLetter : coverLetter,
+            status : DevApplicationStatus.PENDING
         })
         );
     }
@@ -265,14 +283,18 @@ contract Chainskill{
             revert ProjectIdDoesNotExists();
         }
 
-        Applied [] memory allDevsThatApplied = DevAppliedProjectMapping[projectID];
+        Applied [] storage allDevsThatApplied = DevAppliedProjectMapping[projectID];
         bool devApplied = false;
 
         for(uint256 i=0;i<allDevsThatApplied.length;i++){
             if(allDevsThatApplied[i].devAddr==devAddr) {
+                allDevsThatApplied[i].status = DevApplicationStatus.ACCEPTED;
                 devApplied =true;
                 break;
+            }else {
+                allDevsThatApplied[i].status = DevApplicationStatus.REJECTED;
             }
+
         }
 
         if(!devApplied) revert DevAddrGivenDidnotAppliedToThisListing();
@@ -310,7 +332,7 @@ contract Chainskill{
     }
     }
 
-    function MarkProjectCompleteAndPayDev(uint256 projectID,address companyAddr) public payable{
+    function MarkProjectCompleteAndPayDev(uint256 projectID,address companyAddr,uint256 DevRating) public payable{
         if(msg.sender!=companyAddr){
             revert UnAuthorisedAccess();
         }
@@ -323,10 +345,13 @@ contract Chainskill{
             revert ProjectIdDoesNotExists();
         }
 
+        if(DevRating<0 || DevRating>5) revert RatingRangeOutOfBound();
+
         Listing[] storage listings = CompanyListing[companyAddr];
 
         for(uint256 i=0;i<listings.length;i++){
             if(listings[i].ListingUUID == projectID){
+                if(listings[i].devAddr==address(0)) revert ProjectWasNotAssigned();
                 listings[i].status = ListingStatus.CLOSED;
                 DevCompletedProjects[listings[i].devAddr].push(listings[i]);
                 removeInProgressProject(listings[i].devAddr,projectID);
@@ -336,9 +361,48 @@ contract Chainskill{
                 }
                 payable(listings[i].devAddr).transfer(msg.value);
 
+                CompanyMap[companyAddr].totalSpendings+=msg.value;
+                CompanyMap[companyAddr].prevProjectCount+=1;
+                DevMap[listings[i].devAddr].totalProjectsCompleted+=1;
+
+                DevMap[listings[i].devAddr].rating = (DevMap[listings[i].devAddr].rating + DevRating)/(DevMap[listings[i].devAddr].peopleRated + 1);
+                DevMap[listings[i].devAddr].peopleRated+=1;
+
                 break;
             }
         }
+    }
+
+    function RejectDev(uint256 projectID,address devAddr,address companyAddr) public {
+        if(msg.sender!=companyAddr){
+            revert UnAuthorisedAccess();
+        }
+
+         if(CompanyMap[companyAddr].addr==address(0)){
+            revert CompanyIsNotRegistered();
+        }
+
+        if(DevMap[devAddr].addr==address(0)){
+            revert DevProfileDoesNotExist();
+        }
+
+        if(projectIdToCompanyMap[projectID]!=companyAddr){
+            revert ProjectIdDoesNotExists();
+        }
+
+        Applied [] storage allDevsThatApplied = DevAppliedProjectMapping[projectID];
+        bool devApplied = false;
+
+        for(uint256 i=0;i<allDevsThatApplied.length;i++){
+            if(allDevsThatApplied[i].devAddr==devAddr) {
+                devApplied =true;
+                allDevsThatApplied[i].status = DevApplicationStatus.REJECTED;
+                break;
+            }
+        }
+
+        if(!devApplied) revert DevAddrGivenDidnotAppliedToThisListing();
+
     }
 
 
@@ -374,6 +438,33 @@ contract Chainskill{
 
     function getWhoBiddedForProject(uint256 projectId) public view returns(Applied[] memory){
         return DevAppliedProjectMapping[projectId];
+    }
+
+    function getApplicationStatus(uint256 projectID,address devAddr) public view returns(uint256){
+        if(projectIdToCompanyMap[projectID]==address(0)) revert ProjectIdDoesNotExists();
+
+        Applied [] memory allApplications = DevAppliedProjectMapping[projectID];
+
+        for(uint256 i=0;i<allApplications.length;i++){
+            if(allApplications[i].devAddr == devAddr) return uint256(allApplications[i].status);
+        }
+        
+        revert DevAddrGivenDidnotAppliedToThisListing();
+    }
+
+    function getDevCompletedProjects(address DevAddr) public view returns(Listing[] memory){
+        if(DevMap[DevAddr].addr==address(0)) revert ProfileDoesNotExist();
+        return DevCompletedProjects[DevAddr];
+    }
+
+    function getDevAppliedProjects(address DevAddr) public view returns(Listing[] memory){
+        if(DevMap[DevAddr].addr==address(0)) revert ProfileDoesNotExist();
+        return DevTotalAppliedProjects[DevAddr];
+    }
+
+    function getDevInProgressProjects(address DevAddr) public view returns(Listing[] memory){
+        if(DevMap[DevAddr].addr==address(0)) revert ProfileDoesNotExist();
+        return DevInProgressProjects[DevAddr];
     }
 
 }
