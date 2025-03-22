@@ -76,11 +76,11 @@ export default function ClientJobList() {
     return (
         <div className="space-y-4">
             {jobs.map((job) => (
-                <Card key={job.id}>
+                <Card key={job.id} className="bg-black border-gray-600">
                     <CardHeader className="pb-2">
                         <div className="flex justify-between items-start">
                             <div>
-                                <CardTitle>{job.title}</CardTitle>
+                                <CardTitle className="text-emerald-500 text-lg">{job.title}</CardTitle>
                                 <CardDescription>Posted {job.postedAt}</CardDescription>
                             </div>
                             <Badge variant={job.status === "active" ? "default" : job.status === "closed" ? "secondary" : "outline"}>
@@ -89,7 +89,7 @@ export default function ClientJobList() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-sm line-clamp-2 mb-4">{job.description}</p>
+                        <p className="text-sm line-clamp-2 mb-4 text-gray-200">{job.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
                             {job.skills.map((skill) => (
                                 <Badge key={skill} variant="secondary">
@@ -100,17 +100,17 @@ export default function ClientJobList() {
                         <div className="flex justify-between text-sm">
                             <div>
                                 <span className="text-muted-foreground">Budget: </span>
-                                <span className="font-medium">
-                                    {job.jobType === "fixed" ? `$${job.budget} fixed` : `$${job.budget}/hr`}
+                                <span className="font-medium text-gray-200">
+                                    ETH. {job.budget}
                                 </span>
                             </div>
                             <div>
                                 <span className="text-muted-foreground">Applicants: </span>
-                                <span className="font-medium">{job.applicantsCount}</span>
+                                <span className="font-medium text-gray-200">{job.applicantsCount}</span>
                             </div>
                         </div>
                     </CardContent>
-                    <CardFooter className="flex justify-end gap-2 border-t pt-4">
+                    <CardFooter className="flex justify-end gap-2 pt-4">
                         <Button variant="outline">Edit</Button>
                         {job.status === "active" ? (
                             <Button variant="destructive">Close Job</Button>

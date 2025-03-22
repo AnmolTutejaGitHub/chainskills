@@ -80,7 +80,7 @@ export default function FreelancerDashboard() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    <div className="text-sm text-gray-300">UTC+01:00</div>
+                    <div className="text-sm text-gray-300">UTC+05:30</div>
                   </div>
                 </div>
               </div>
