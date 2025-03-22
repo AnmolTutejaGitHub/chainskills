@@ -17,6 +17,8 @@ contract Chainskill{
     error UnAuthorisedAccess();
     error ProjectWasNotAssigned();
     error RatingRangeOutOfBound();
+    error projectHasBeenAssignedOrFinished();
+    error DifficultyWronglySpecified();
 
     struct Dev{
         address addr;
@@ -48,13 +50,19 @@ contract Chainskill{
         OPEN,
         ASSIGNED,
         CLOSED,
-        EXPIRED
+        TERMINATED
     }
 
     enum DevApplicationStatus{
         PENDING,
         ACCEPTED,
         REJECTED
+    }
+
+    enum ProjectDifficulty{
+        ENTRY_LEVEL,
+        INTERMEDIATE,
+        EXPERT
     }
 
     struct Applied{
@@ -77,6 +85,7 @@ contract Chainskill{
         address devAddr;
         uint256 devFees;
         uint256 ListedOn;
+        ProjectDifficulty difficulty;
         // address[] devsApplied; // logic in mapping DevAppliedProjectMapping
     }
 
@@ -150,7 +159,7 @@ contract Chainskill{
         companies.push(addr);
     }
 
-    function addListing(uint256 uuid, address companyAddr , string memory topic, string memory description , string[] memory skillsReq,uint256 duration,uint256 budget) public {
+    function addListing(uint256 uuid, address companyAddr , string memory topic, string memory description , string[] memory skillsReq,uint256 duration,uint256 budget , uint256 difficulty) public {
 
         if(msg.sender!=companyAddr){
             revert UnAuthorisedAccess();
@@ -168,6 +177,8 @@ contract Chainskill{
             revert FieldsCanNotBeEmpty();
         } 
 
+        if(difficulty<0 || difficulty>2) revert DifficultyWronglySpecified();
+
         CompanyListing[companyAddr].push(
             Listing({
             ListingUUID : uuid,
@@ -180,7 +191,8 @@ contract Chainskill{
             devAddr: address(0),
             devFees : 0,
             budget : budget,
-            ListedOn : block.timestamp
+            ListedOn : block.timestamp,
+            difficulty : ProjectDifficulty(difficulty)
         })
         );
 
@@ -404,6 +416,35 @@ contract Chainskill{
         if(!devApplied) revert DevAddrGivenDidnotAppliedToThisListing();
 
     }
+
+    function terminateAListing(uint256 projectID,address companyAddr) public {
+         if(msg.sender!=companyAddr){
+            revert UnAuthorisedAccess();
+        }
+
+        if(CompanyMap[companyAddr].addr==address(0)){
+            revert CompanyIsNotRegistered();
+        }
+
+        if(projectIdToCompanyMap[projectID]!=companyAddr){
+            revert ProjectIdDoesNotExists();
+        }
+
+
+        Listing[] storage listings = CompanyListing[companyAddr];
+        for(uint256 i=0;i<listings.length;i++){
+            if(listings[i].ListingUUID == projectID){
+               if(listings[i].status!=ListingStatus.OPEN) revert projectHasBeenAssignedOrFinished();
+               listings[i].status = ListingStatus.TERMINATED;
+               break;
+            }
+        }
+    }
+
+
+    // function NFTGeneration(uint256 projectId,Listing project) private{
+    //         ////
+    // }
 
 
     function getAllCompaniesAddr() public view returns(address[] memory){

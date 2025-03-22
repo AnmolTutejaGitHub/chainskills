@@ -24,6 +24,7 @@ contract ChainskillTest is Test{
    uint256 constant BUDGET = 1010;
    uint256 constant CHARGES = 1010;
    string constant COVER_LETTER = "cover_letter";
+   uint256 constant  DIFFICULTY = 1;
 
 
    address public PLAYER = makeAddr("player");
@@ -79,7 +80,7 @@ contract ChainskillTest is Test{
 
    function testProjectListing() public RegisterCompany{
        vm.prank(COMPANY);
-       cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+       cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
    }
 
    function testDevUpdate() public RegisterDev{
@@ -112,7 +113,7 @@ contract ChainskillTest is Test{
 
    function testApplyToListing() public RegisterCompany RegisterDev{
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -120,7 +121,7 @@ contract ChainskillTest is Test{
 
    function testRevertIfApplyingToUnListingProject() public RegisterCompany RegisterDev{
      vm.prank(COMPANY);
-     cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+     cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.expectRevert(Chainskill.ProjectIdDoesNotExists.selector);
       vm.prank(PLAYER);
@@ -129,7 +130,7 @@ contract ChainskillTest is Test{
 
    function testSelectBidder() public RegisterCompany RegisterDev{
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -140,7 +141,7 @@ contract ChainskillTest is Test{
 
    function testRevertSelectBidderIfDevHasNotBidded() public RegisterCompany RegisterDev {
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.expectRevert(Chainskill.DevAddrGivenDidnotAppliedToThisListing.selector);
       vm.prank(COMPANY);
@@ -149,11 +150,34 @@ contract ChainskillTest is Test{
 
    function testRevertSelectBidderIfDevNotFound() public RegisterCompany {
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.expectRevert(Chainskill.DevProfileDoesNotExist.selector);
       vm.prank(COMPANY);
       cs.selectBidder(UUID, COMPANY, PLAYER , CHARGES);
+   }
+
+   function testTerminateAContract() public RegisterCompany{
+      vm.prank(COMPANY);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
+
+      vm.prank(COMPANY);
+      cs.terminateAListing(UUID, COMPANY);
+   }
+
+   function testTerminateAContractRevertsAsProjectAssigned () public RegisterCompany RegisterDev{
+      vm.prank(COMPANY);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
+
+      vm.prank(PLAYER);
+      cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
+
+      vm.prank(COMPANY);
+      cs.selectBidder(UUID, COMPANY, PLAYER , CHARGES);
+
+      vm.expectRevert(Chainskill.projectHasBeenAssignedOrFinished.selector);
+      vm.prank(COMPANY); 
+      cs.terminateAListing(UUID, COMPANY);
    }
 
    function testRevertIfSelectingMultipleBidder() public RegisterCompany RegisterDev {
@@ -161,7 +185,7 @@ contract ChainskillTest is Test{
       cs.registerDev(PLAYER_2, EMAIL,NAME,skills,AVAIL, perHour , BIO);
 
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -179,7 +203,7 @@ contract ChainskillTest is Test{
 
    function testMarkProjectCompleteAndPayDev() public RegisterCompany RegisterDev {
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -193,7 +217,7 @@ contract ChainskillTest is Test{
 
    function testMarkProjectCompleteButPayLessDev() public RegisterCompany RegisterDev{
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -208,7 +232,7 @@ contract ChainskillTest is Test{
 
    function testMarkProjectCompleteButDevDidNotApplied() public RegisterCompany RegisterDev{
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.expectRevert(Chainskill.ProjectWasNotAssigned.selector);
       vm.prank(COMPANY);
@@ -217,7 +241,7 @@ contract ChainskillTest is Test{
 
    function testCompanyRejectDevFromAProject() public RegisterCompany RegisterDev{
      vm.prank(COMPANY);
-     cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+     cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -233,7 +257,7 @@ contract ChainskillTest is Test{
       cs.registerDev(PLAYER_2, EMAIL,NAME,skills,AVAIL, perHour , BIO);
 
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -264,13 +288,13 @@ contract ChainskillTest is Test{
 
    function testGetDevProfileAndMimicProjects() public RegisterDev RegisterCompany{
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(COMPANY);
-      cs.addListing(5050,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(5050,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(COMPANY);
-      cs.addListing(3456,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(3456,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -312,7 +336,7 @@ contract ChainskillTest is Test{
       cs.registerDev(PLAYER_2, EMAIL,NAME,skills,AVAIL, perHour , BIO);
 
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -328,7 +352,7 @@ contract ChainskillTest is Test{
       cs.registerDev(PLAYER_2, EMAIL,NAME,skills,AVAIL, perHour , BIO);
 
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
@@ -348,10 +372,10 @@ contract ChainskillTest is Test{
       cs.registerCompany(COMPANY_2, NAME, EMAIL, INDUSTRY, WEBSITE, DESCRIPTION);
 
       vm.prank(COMPANY);
-      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(COMPANY_2);
-      cs.addListing(1212,COMPANY_2,TOPIC,DESCRIPTION,skills,DURATION,BUDGET);
+      cs.addListing(1212,COMPANY_2,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
 
       vm.prank(PLAYER);
       cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
