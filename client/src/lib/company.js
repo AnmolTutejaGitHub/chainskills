@@ -162,9 +162,9 @@ export async function getClientApplications(){
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(contractAddress, abi, signer);
 
-    const result = await contract.getAllCompanyProposals(addr);
+    const result = await contract.getAllApplicationsToCompanyJobs(addr);
 
-    console.log("application Data: ", result);
+    console.log("Listing Applied Data: ", result);
     return result;
   } catch (error) {
     console.error("Error saving freelancer profile:", error);

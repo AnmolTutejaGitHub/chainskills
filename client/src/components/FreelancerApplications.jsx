@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
 // import { getFreelancerApplications } from "@/lib/applications"
+import {getfreelancerApplications } from "../lib/freelancer";
 
 const mockFreelancerApplications = [
     {
@@ -36,6 +37,18 @@ const mockFreelancerApplications = [
     },
   ]
 
+  const normalizeApplications = (rawApplications) => {
+    return rawApplications.map((Application) => ({
+        id: Application[0].toString(),
+        title: Application[7],
+        charges: Number(Application[2]),
+        AppliedAt: (new Date(Number(Application[5]) * 1000)).toLocaleDateString(),
+        status: Application[4] === 0n ? "pending" : Application[4] === 1n ? "approved" : "rejected",
+        companyName : Application[6],
+        coverLetter : Application[3]
+    }));
+  };
+
 export default function FreelancerApplications() {
   const [applications, setApplications] = useState([])
   const [loading, setLoading] = useState(true)
@@ -43,8 +56,9 @@ export default function FreelancerApplications() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        // const applicationsData = await getFreelancerApplications()
-        setApplications(mockFreelancerApplications)
+        const applicationsData = await getfreelancerApplications();
+        const normalise = normalizeApplications(applicationsData);
+        setApplications(normalise);
       } catch (error) {
         console.error("Error fetching applications:", error)
       } finally {
@@ -75,7 +89,7 @@ export default function FreelancerApplications() {
           <CardHeader className="pb-2">
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-emerald-500 text-lg">{application.jobTitle}</CardTitle>
+                <CardTitle className="text-emerald-500 text-lg">{application.title}</CardTitle>
                 <CardDescription>{application.companyName}</CardDescription>
               </div>
               <Badge
@@ -95,11 +109,11 @@ export default function FreelancerApplications() {
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-emerald-500">Applied on:</span>
-                <span className="text-gray-200">{application.appliedAt}</span>
+                <span className="text-gray-200">{application.AppliedAt}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-emerald-500">Proposed rate:</span>
-                <span className="text-gray-200">${application.proposedRate}/hr</span>
+                <span className="text-gray-200">{application.charges} ETH</span>
               </div>
               <div className="pt-2">
                 <div className="text-sm text-emerald-500 font-medium mb-1">Cover Letter:</div>

@@ -9,6 +9,8 @@ import { Textarea } from "../../../components/ui/textarea"
 import { Badge } from "../../../components/ui/badge"
 import { Briefcase, DollarSign, Clock, ChevronRight, Shield, Loader2, ArrowLeft, Building2 } from "lucide-react"
 import Header from "../../../components/dashboard/Header"
+import { useLocation } from "react-router-dom";
+import {applyToJob} from "../../../lib/freelancer";
 
 const jobData =
 {
@@ -27,6 +29,8 @@ const jobData =
 
 export default function ApplyToJobPage() {
     const navigate = useNavigate()
+    const location = useLocation();
+    const jobData = location.state?.job;
 
     const [isLoading, setIsLoading] = useState(true)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -66,7 +70,7 @@ export default function ApplyToJobPage() {
         setIsSubmitting(true)
 
         try {
-
+            await applyToJob(job.id,formData.proposedRate,formData.coverLetter);
             navigate("/dashboard/freelancer")
         } catch (error) {
             console.error("Error applying to job:", error)
@@ -146,11 +150,10 @@ export default function ApplyToJobPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                         <div className="flex items-center gap-2">
-                            <DollarSign className="h-4 w-4 text-emerald-400 flex-shrink-0" />
                             <div>
                                 <span className="text-emerald-300/70 block">Budget</span>
                                 <span className="font-medium text-emerald-200">
-                                    {job.jobType === "fixed" ? `$${job.budget} fixed` : `$${job.budget}/hr`}
+                                    {job.jobType === "fixed" ? `${job.budget} fixed` : `${job.budget} ETH`}
                                 </span>
                             </div>
                         </div>
@@ -165,7 +168,7 @@ export default function ApplyToJobPage() {
                             <Clock className="h-4 w-4 text-emerald-400 flex-shrink-0" />
                             <div>
                                 <span className="text-emerald-300/70 block">Duration</span>
-                                <span className="font-medium text-emerald-200">{job.duration}</span>
+                                <span className="font-medium text-emerald-200">{job.duration} days</span>
                             </div>
                         </div>
                     </div>
@@ -178,7 +181,7 @@ export default function ApplyToJobPage() {
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="proposedRate" className="text-emerald-200">
-                                    {job.jobType === "fixed" ? "Your Bid (USD)" : "Hourly Rate (USD)"}
+                                   Your Bid
                                 </Label>
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-400">$</span>
@@ -187,7 +190,7 @@ export default function ApplyToJobPage() {
                                         name="proposedRate"
                                         type="number"
                                         min="1"
-                                        placeholder={job.jobType === "fixed" ? "Enter your bid" : "Enter your hourly rate"}
+                                        placeholder={"Enter your bid" }
                                         value={formData.proposedRate}
                                         onChange={handleChange}
                                         required

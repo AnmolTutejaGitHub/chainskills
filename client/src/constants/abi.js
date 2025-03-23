@@ -1,4 +1,4 @@
-const abi = [
+const abi =[
     {
         "type": "constructor",
         "inputs": [],
@@ -144,6 +144,65 @@ const abi = [
     },
     {
         "type": "function",
+        "name": "CompanyReceivedApplications",
+        "inputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "ListingUUID",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "devAddr",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "charges",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "coverLetter",
+                "type": "string",
+                "internalType": "string"
+            },
+            {
+                "name": "status",
+                "type": "uint8",
+                "internalType": "enum Chainskill.DevApplicationStatus"
+            },
+            {
+                "name": "AppliedAt",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "companyName",
+                "type": "string",
+                "internalType": "string"
+            },
+            {
+                "name": "title",
+                "type": "string",
+                "internalType": "string"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
         "name": "DevAppliedProjectMapping",
         "inputs": [
             {
@@ -182,6 +241,80 @@ const abi = [
                 "name": "status",
                 "type": "uint8",
                 "internalType": "enum Chainskill.DevApplicationStatus"
+            },
+            {
+                "name": "AppliedAt",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "companyName",
+                "type": "string",
+                "internalType": "string"
+            },
+            {
+                "name": "title",
+                "type": "string",
+                "internalType": "string"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "DevAppliedProjects",
+        "inputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "ListingUUID",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "devAddr",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "charges",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "coverLetter",
+                "type": "string",
+                "internalType": "string"
+            },
+            {
+                "name": "status",
+                "type": "uint8",
+                "internalType": "enum Chainskill.DevApplicationStatus"
+            },
+            {
+                "name": "AppliedAt",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "companyName",
+                "type": "string",
+                "internalType": "string"
+            },
+            {
+                "name": "title",
+                "type": "string",
+                "internalType": "string"
             }
         ],
         "stateMutability": "view"
@@ -691,6 +824,151 @@ const abi = [
     },
     {
         "type": "function",
+        "name": "getAllApplicationsToCompanyJobs",
+        "inputs": [
+            {
+                "name": "companyAddr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "tuple[]",
+                "internalType": "struct Chainskill.ListingWithApplications[]",
+                "components": [
+                    {
+                        "name": "listing",
+                        "type": "tuple",
+                        "internalType": "struct Chainskill.Listing",
+                        "components": [
+                            {
+                                "name": "ListingUUID",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "companyAddr",
+                                "type": "address",
+                                "internalType": "address"
+                            },
+                            {
+                                "name": "topic",
+                                "type": "string",
+                                "internalType": "string"
+                            },
+                            {
+                                "name": "description",
+                                "type": "string",
+                                "internalType": "string"
+                            },
+                            {
+                                "name": "skillsReq",
+                                "type": "string[]",
+                                "internalType": "string[]"
+                            },
+                            {
+                                "name": "duration",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "budget",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "status",
+                                "type": "uint8",
+                                "internalType": "enum Chainskill.ListingStatus"
+                            },
+                            {
+                                "name": "devAddr",
+                                "type": "address",
+                                "internalType": "address"
+                            },
+                            {
+                                "name": "devFees",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "ListedOn",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "difficulty",
+                                "type": "uint8",
+                                "internalType": "enum Chainskill.ProjectDifficulty"
+                            },
+                            {
+                                "name": "applicantCount",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "companyName",
+                                "type": "string",
+                                "internalType": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "applications",
+                        "type": "tuple[]",
+                        "internalType": "struct Chainskill.Applied[]",
+                        "components": [
+                            {
+                                "name": "ListingUUID",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "devAddr",
+                                "type": "address",
+                                "internalType": "address"
+                            },
+                            {
+                                "name": "charges",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "coverLetter",
+                                "type": "string",
+                                "internalType": "string"
+                            },
+                            {
+                                "name": "status",
+                                "type": "uint8",
+                                "internalType": "enum Chainskill.DevApplicationStatus"
+                            },
+                            {
+                                "name": "AppliedAt",
+                                "type": "uint256",
+                                "internalType": "uint256"
+                            },
+                            {
+                                "name": "companyName",
+                                "type": "string",
+                                "internalType": "string"
+                            },
+                            {
+                                "name": "title",
+                                "type": "string",
+                                "internalType": "string"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
         "name": "getAllCompaniesAddr",
         "inputs": [],
         "outputs": [
@@ -802,6 +1080,72 @@ const abi = [
                 "name": "",
                 "type": "address[]",
                 "internalType": "address[]"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getApplication",
+        "inputs": [
+            {
+                "name": "projectID",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "devAddr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "tuple",
+                "internalType": "struct Chainskill.Applied",
+                "components": [
+                    {
+                        "name": "ListingUUID",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "devAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "charges",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "coverLetter",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "status",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.DevApplicationStatus"
+                    },
+                    {
+                        "name": "AppliedAt",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "title",
+                        "type": "string",
+                        "internalType": "string"
+                    }
+                ]
             }
         ],
         "stateMutability": "view"
@@ -974,6 +1318,67 @@ const abi = [
                     },
                     {
                         "name": "description",
+                        "type": "string",
+                        "internalType": "string"
+                    }
+                ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getDevApplications",
+        "inputs": [
+            {
+                "name": "devAddr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "tuple[]",
+                "internalType": "struct Chainskill.Applied[]",
+                "components": [
+                    {
+                        "name": "ListingUUID",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "devAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "charges",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "coverLetter",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "status",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.DevApplicationStatus"
+                    },
+                    {
+                        "name": "AppliedAt",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "title",
                         "type": "string",
                         "internalType": "string"
                     }
@@ -1489,6 +1894,21 @@ const abi = [
                         "name": "status",
                         "type": "uint8",
                         "internalType": "enum Chainskill.DevApplicationStatus"
+                    },
+                    {
+                        "name": "AppliedAt",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "title",
+                        "type": "string",
+                        "internalType": "string"
                     }
                 ]
             }

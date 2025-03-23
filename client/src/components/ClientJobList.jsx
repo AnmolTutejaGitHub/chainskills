@@ -50,9 +50,11 @@ const normalizeJobs = (rawJobs) => {
         skills: Object.values(job[4]),
         jobType: "hourly",
         budget: Number(job[6]) / 1e18,
-     postedAt: (new Date(Number(job[10]) * 1000)).toLocaleDateString(),
-        status: job[11] === 1n ? "active" : "closed",
+        postedAt: (new Date(Number(job[10]) * 1000)).toLocaleDateString(),
+        status: ["open", "assigned", "closed", "terminated"][Number(job[7])] || "unknown",
         applicantsCount: Number(job[9]),
+        assignedTo : job[8].toString(),
+        deal : job[9]
     }));
 };
 
@@ -101,9 +103,8 @@ export default function ClientJobList() {
                                 <CardTitle className="text-emerald-500 text-lg">{job.title}</CardTitle>
                                 <CardDescription>Posted {job.postedAt}</CardDescription>
                             </div>
-                            <Badge variant={job.status === "active" ? "default" : job.status === "closed" ? "secondary" : "outline"}>
-                                {/* {job.status.charAt(0).toUpperCase() + job.status.slice(1)} */}
-                                Hi
+                            <Badge variant={ job.status === "open" ? "default" : job.status === "assigned"? "secondary" : job.status === "closed" ? "outline" : "destructive" }>
+                                {job.status}
                             </Badge>
                         </div>
                     </CardHeader>
@@ -130,14 +131,7 @@ export default function ClientJobList() {
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-end gap-2 pt-4">
-                        <Button variant="outline">Edit</Button>
-                        {job.status === "active" ? (
-                            <Button variant="destructive">Close Job</Button>
-                        ) : job.status === "draft" ? (
-                            <Button>Publish</Button>
-                        ) : (
-                            <Button>Reopen</Button>
-                        )}
+                        <Button variant="destructive">Terminate</Button>
                     </CardFooter>
                 </Card>
             ))}

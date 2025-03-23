@@ -5,6 +5,7 @@ import { Button } from "./ui/button"
 import { Briefcase, Clock, Coins } from "lucide-react"
 // import { getAvailableJobs } from "@/lib/jobs"
 import {getAvailableJobs} from "../lib/freelancer";
+import { useNavigate } from "react-router-dom"
 
 const mockAvailableJobs = [
     {
@@ -68,6 +69,7 @@ const normalizeJobs = (rawJobs) => {
 export default function FreelancerJobList() {
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -136,7 +138,7 @@ export default function FreelancerJobList() {
           </CardContent>
           <CardFooter className="flex justify-between pt-4">
             <div className="text-sm text-muted-foreground">Posted {job.postedAt}</div>
-            <Button className="bg-emerald-500 text-black hover:bg-emerald-400 cursor-pointer">Apply Now</Button>
+            <Button className="bg-emerald-500 text-black hover:bg-emerald-400 cursor-pointer" onClick={()=>navigate("/dashboard/freelancer/applyToJob",{state:{job}})}>Apply Now</Button>
           </CardFooter>
         </Card>
       ))}

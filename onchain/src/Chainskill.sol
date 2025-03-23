@@ -73,6 +73,9 @@ contract Chainskill{
         uint256 charges;
         string coverLetter;
         DevApplicationStatus status;
+        uint256 AppliedAt;
+        string companyName;
+        string title;
     }
 
     struct Listing{
@@ -93,6 +96,12 @@ contract Chainskill{
         // address[] devsApplied; // logic in mapping DevAppliedProjectMapping
     }
 
+    struct ListingWithApplications {
+        Listing listing;
+        Applied[] applications;
+    }
+
+
 
     mapping(address=>Dev) public DevMap;
     mapping(address=> Company) public CompanyMap;
@@ -101,6 +110,8 @@ contract Chainskill{
     mapping(address=>Listing[]) public DevInProgressProjects;
     mapping(address=>Listing[]) public DevTotalAppliedProjects;
     mapping(uint256=>Applied[]) public DevAppliedProjectMapping;
+    mapping(address=>Applied[]) public DevAppliedProjects;
+    mapping(address=>Applied[]) public CompanyReceivedApplications;
     mapping(uint256=>address) public projectIdToCompanyMap;
 
 
@@ -290,11 +301,13 @@ contract Chainskill{
 
         address companyAddr = projectIdToCompanyMap[projectID];
         Listing[] memory listings = CompanyListing[companyAddr];
+        Listing memory applied;
         for(uint256 i=0;i<listings.length;i++){
             if(listings[i].ListingUUID == projectID){
                 if(listings[i].status!=ListingStatus.OPEN) revert ListingIsClosed();
                 DevTotalAppliedProjects[devAddr].push(listings[i]);
                 listings[i].applicantCount+=1;
+                applied = listings[i];
             }
         }
 
@@ -304,7 +317,33 @@ contract Chainskill{
             devAddr : devAddr,
             charges : charges,
             coverLetter : coverLetter,
-            status : DevApplicationStatus.PENDING
+            status : DevApplicationStatus.PENDING,
+            AppliedAt : block.timestamp,
+            companyName: CompanyMap[companyAddr].name,
+            title : applied.topic
+        }));
+
+        DevAppliedProjects[devAddr].push(Applied({
+            ListingUUID : projectID,
+            devAddr : devAddr,
+            charges : charges,
+            coverLetter : coverLetter,
+            status : DevApplicationStatus.PENDING,
+            AppliedAt : block.timestamp,
+            companyName: CompanyMap[companyAddr].name,
+            title : applied.topic
+        })
+        );
+
+        CompanyReceivedApplications[companyAddr].push(Applied({
+            ListingUUID : projectID,
+            devAddr : devAddr,
+            charges : charges,
+            coverLetter : coverLetter,
+            status : DevApplicationStatus.PENDING,
+            AppliedAt : block.timestamp,
+            companyName: CompanyMap[companyAddr].name,
+            title : applied.topic
         })
         );
     }
@@ -560,6 +599,22 @@ contract Chainskill{
         revert DevAddrGivenDidnotAppliedToThisListing();
     }
 
+    function getApplication(uint256 projectID,address devAddr) public view returns(Applied memory){
+        if(projectIdToCompanyMap[projectID]==address(0)) revert ProjectIdDoesNotExists();
+
+        Applied [] memory allApplications = DevAppliedProjectMapping[projectID];
+
+        for(uint256 i=0;i<allApplications.length;i++){
+            if(allApplications[i].devAddr == devAddr) return allApplications[i];
+        }
+        
+        revert DevAddrGivenDidnotAppliedToThisListing();
+    }
+
+     function getDevApplications(address devAddr) public view returns(Applied [] memory){
+        return DevAppliedProjects[devAddr];
+    }
+
     function getDevCompletedProjects(address DevAddr) public view returns(Listing[] memory){
         if(DevMap[DevAddr].addr==address(0)) revert ProfileDoesNotExist();
         return DevCompletedProjects[DevAddr];
@@ -592,6 +647,26 @@ contract Chainskill{
     function getAllCompanyProposals(address companyAddr) public view returns(Listing[] memory){
         if(msg.sender!=companyAddr) revert UnAuthorisedAccess();
         return CompanyListing[companyAddr];
+    }
+
+    function getAllApplicationsToCompanyJobs(address companyAddr) public view returns(ListingWithApplications[] memory){
+         if(msg.sender!=companyAddr) revert UnAuthorisedAccess();
+
+        uint256 totalListings = CompanyListing[companyAddr].length;
+        ListingWithApplications[] memory result = new ListingWithApplications[](totalListings);
+
+        for(uint256 i = 0; i < totalListings; i++) {
+            Listing memory listing = CompanyListing[companyAddr][i];
+            Applied[] memory applications = DevAppliedProjectMapping[listing.ListingUUID];
+
+            result[i] = ListingWithApplications({
+                listing: listing,
+                applications: applications
+            });
+        }
+
+        return result;
+
     }
 
 }
