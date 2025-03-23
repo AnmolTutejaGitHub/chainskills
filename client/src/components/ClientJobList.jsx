@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
+import { getCompanyListings } from "../lib/company"
 
 const mockClientJobs = [
     {
@@ -41,6 +42,20 @@ const mockClientJobs = [
     },
 ]
 
+const normalizeJobs = (rawJobs) => {
+    return rawJobs.map((job) => ({
+        id: job[0].toString(),
+        title: job[2],
+        description: job[3],
+        skills: Object.values(job[4]),
+        jobType: "hourly",
+        budget: Number(job[6]) / 1e18,
+        postedAt: new Date(Number(job[10])).toLocaleDateString(),
+        status: job[11] === 1n ? "active" : "closed",
+        applicantsCount: Number(job[9]),
+    }));
+};
+
 export default function ClientJobList() {
     const [jobs, setJobs] = useState([])
     const [loading, setLoading] = useState(true)
@@ -48,8 +63,11 @@ export default function ClientJobList() {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                // const jobsData = await getClientJobs()
-                setJobs(mockClientJobs)
+                const rawJobs = await getCompanyListings();
+                console.log("Raw Jobs:", rawJobs);
+
+                const normalizedJobs = normalizeJobs(rawJobs);
+                setJobs(normalizedJobs);
             } catch (error) {
                 console.error("Error fetching jobs:", error)
             } finally {
@@ -84,7 +102,8 @@ export default function ClientJobList() {
                                 <CardDescription>Posted {job.postedAt}</CardDescription>
                             </div>
                             <Badge variant={job.status === "active" ? "default" : job.status === "closed" ? "secondary" : "outline"}>
-                                {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                                {/* {job.status.charAt(0).toUpperCase() + job.status.slice(1)} */}
+                                Hi
                             </Badge>
                         </div>
                     </CardHeader>

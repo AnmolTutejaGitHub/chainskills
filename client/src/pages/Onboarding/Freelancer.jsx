@@ -85,8 +85,6 @@ export default function FreelancerOnboarding() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log("I have clicked this button");
-
     try {
       await saveFreelancerProfile(formData);
       navigate('/dashboard/freelancer');

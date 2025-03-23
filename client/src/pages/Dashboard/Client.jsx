@@ -11,7 +11,7 @@ import Header from "../../components/dashboard/Header";
 import { getCompanyData } from "../../lib/company";
 
 export default function ClientDashboard() {
-  const [companyProfile, setCompanyProfile] = useState({    
+  const [companyProfile, setCompanyProfile] = useState({
     companyName: "",
     description: "",
     industry: "",
@@ -20,33 +20,26 @@ export default function ClientDashboard() {
     totalSpent: 0
   });
 
-  
-    useEffect(() => {
-      const fetchData = async () => {
-        const result = await getCompanyData();
-        console.log("Result: ", result);
-  
-        setCompanyProfile({
-          companyName: result[1],
-          description: result[7],
-          industry: result[5],
-          jobsPosted: 0,
-          activeContracts: 0,
-          totalSpent: 0
-          // name: result[1],
-          // title: result[6],
-          // hourlyRate: ethers.formatUnits(result[5], 18),
-          // skills: result[3],
-          // completedJobs: Number(result[9], 10),
-          // rating: Number(result[7], 10),
-          // earnings: ethers.formatUnits(result[8], 18),
-        });
-  
-        console.log("Freelancer profile", companyProfile);
-      }
-  
-      fetchData();
-    }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getCompanyData();
+      console.log("Result: ", result);
+
+      setCompanyProfile({
+        companyName: result[1],
+        description: result[7],
+        industry: result[5],
+        jobsPosted: 0,
+        activeContracts: 0,
+        totalSpent: 0
+      });
+
+      console.log("Freelancer profile", companyProfile);
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-black">

@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Textarea } from "../../../components/ui/textarea";
 import Header from "../../../components/dashboard/Header";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
+import { BriefcaseBusiness, Sparkles, Coins, Clock, ChevronRight, Briefcase } from "lucide-react";
+import { postJob } from "../../../lib/company";
+import { useNavigate } from "react-router-dom";
 
 const EXPERIENCE_LEVELS = [
   { label: "Entry Level", value: "entry" },
@@ -21,10 +22,9 @@ export default function PostJobPage() {
     title: "",
     description: "",
     skills: [],
-    jobType: "",
     budget: "",
     experienceLevel: "",
-    duration: "",
+    duration: 0,
   });
   const [skillInput, setSkillInput] = useState("");
 
@@ -67,7 +67,8 @@ export default function PostJobPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
+      await postJob(formData);
+      navigate('/dashboard/client');
     } catch (error) {
       console.error("Error creating job:", error);
     } finally {
@@ -76,147 +77,195 @@ export default function PostJobPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black text-white">
       <Header />
-      <div className="flex flex-col items-center justify-center">
-        <Card className="py-10 w-full max-w-3xl border-2 border-emerald-200 bg-black">
-          <CardHeader>
-            <CardTitle className="text-emerald-300">Post a New Job</CardTitle>
-            <CardDescription className="text-gray-300">
-              Create a job listing to find the perfect talent for your project
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title" className="text-emerald-300">Job Title</Label>
-                  <Input
-                    id="title"
-                    name="title"
-                    placeholder="e.g., Smart Contract Developer for DeFi Project"
-                    value={formData.title}
-                    onChange={handleChange}
-                    className="bg-black border-gray-600 text-white"
-                    required
-                  />
-                </div>
+      <div className="flex flex-col justify-center items-center">
+        <div className="container max-w-4xl py-12">
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center justify-center p-2 mb-4 bg-emerald-900/30 rounded-full">
+              <BriefcaseBusiness className="w-8 h-8 text-emerald-400" />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight text-emerald-400 sm:text-4xl mb-2">Post a New Job</h1>
+            <p className="text-emerald-300/80 max-w-2xl mx-auto">
+              Find the perfect talent for your blockchain project in our decentralized marketplace
+            </p>
+          </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description" className="text-emerald-300">Job Description</Label>
-                  <Textarea
-                    id="description"
-                    name="description"
-                    placeholder="Describe the project, responsibilities, deliverables, and any other relevant details..."
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="bg-black border-gray-600 text-white"
-                    rows={8}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="skills" className="text-emerald-300">Required Skills</Label>
-                  <div className="flex flex-wrap items-center gap-2 border border-gray-600 rounded-md p-2 bg-black">
-                    {formData.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="inline-flex items-center px-3 py-1 text-sm bg-emerald-100 text-emerald-700 rounded-full"
-                      >
-                        {skill}
-                        <button
-                          type="button"
-                          onClick={() => removeSkill(skill)}
-                          className="ml-2 text-emerald-500 hover:text-emerald-700"
-                        >
-                          x
-                        </button>
-                      </span>
-                    ))}
-                    <input
-                      type="text"
-                      value={skillInput}
-                      onChange={handleSkillInputChange}
-                      onKeyDown={handleSkillKeyDown}
-                      placeholder="Add skills (press Enter or ',')"
-                      className="flex-1 bg-black text-white focus:outline-none"
-                    />
+          <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 shadow-xl shadow-emerald-900/10 border border-emerald-900/20">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                    <Sparkles className="h-4 w-4" />
+                    <Label htmlFor="title" className="text-base">
+                      Job Details
+                    </Label>
                   </div>
-                </div>
+                  <div className="space-y-4 pl-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="title" className="text-emerald-200">
+                        Job Title
+                      </Label>
+                      <Input
+                        id="title"
+                        name="title"
+                        placeholder="e.g., Smart Contract Developer for DeFi Project"
+                        value={formData.title}
+                        onChange={handleChange}
+                        required
+                        className="bg-gray-900/70 border-emerald-900/30 focus:border-emerald-500 text-emerald-50 placeholder:text-emerald-200/30"
+                      />
+                    </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="budget" className="text-emerald-300">Budget (ETH)</Label>
-                    <Input
-                      id="budget"
-                      name="budget"
-                      type="number"
-                      min="0"
-                      step="any"
-                      placeholder="1.69"
-                      value={formData.budget}
-                      onChange={handleChange}
-                      className="bg-black border-gray-600 text-white"
-                      required
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="description" className="text-emerald-200">
+                        Job Description
+                      </Label>
+                      <Textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe the project, responsibilities, deliverables, and any other relevant details..."
+                        value={formData.description}
+                        onChange={handleChange}
+                        rows={6}
+                        required
+                        className="bg-gray-900/70 border-emerald-900/30 focus:border-emerald-500 text-emerald-50 placeholder:text-emerald-200/30 resize-none"
+                      />
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="duration" className="text-emerald-300">Project Duration</Label>
-                    <Input
-                      id="duration"
-                      name="duration"
-                      placeholder="e.g., 2 weeks, 3 months"
-                      value={formData.duration}
-                      onChange={handleChange}
-                      className="bg-black border-gray-600 text-white"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="experienceLevel" className="text-emerald-300">Experience Level</Label>
-                    <Select
-                      onValueChange={(value) => handleSelectChange("experienceLevel", value)}
-                      value={formData.experienceLevel}
-                    >
-                      <SelectTrigger className="bg-black border-gray-600 text-white">
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {EXPERIENCE_LEVELS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
+                    <div className="space-y-2">
+                      <Label htmlFor="skills" className="text-emerald-200">
+                        Required Skills
+                      </Label>
+                      <div className="flex flex-wrap items-center gap-2 border border-gray-600 rounded-md p-2">
+                        {formData.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className="inline-flex items-center px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full"
+                          >
+                            {skill}
+                            <button
+                              type="button"
+                              onClick={() => removeSkill(skill)}
+                              className="ml-2 text-green-500 hover:text-green-700"
+                            >
+                              x
+                            </button>
+                          </span>
                         ))}
-                      </SelectContent>
-                    </Select>
+                        <input
+                          type="text"
+                          value={skillInput}
+                          onChange={handleSkillInputChange}
+                          onKeyDown={handleSkillKeyDown}
+                          placeholder="Add skills (press Enter or ',')"
+                          className="flex-1 focus:outline-none focus:ring-0 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gradient-to-r from-transparent via-emerald-900/50 to-transparent my-4" />
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                    <Coins className="h-4 w-4" />
+                    <Label className="text-base">Compensation</Label>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pl-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="budget" className="text-emerald-200">
+                        Budget (ETH)
+                      </Label>
+                      <Input
+                        id="budget"
+                        name="budget"
+                        type="number"
+                        min="0"
+                        step="any"
+                        placeholder="0.00056"
+                        value={formData.budget}
+                        onChange={handleChange}
+                        required
+                        className="bg-gray-900/70 border-emerald-900/30 focus:border-emerald-500 text-emerald-50 placeholder:text-emerald-200/30"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gradient-to-r from-transparent via-emerald-900/50 to-transparent my-4" />
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                    <Clock className="h-4 w-4" />
+                    <Label className="text-base">Timeline & Experience</Label>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pl-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="experienceLevel" className="text-emerald-200">
+                        Experience Level
+                      </Label>
+                      <Select
+                        onValueChange={(value) => handleSelectChange("experienceLevel", value)}
+                        value={formData.experienceLevel}
+                      >
+                        <SelectTrigger className="bg-gray-900/70 border-emerald-900/30 focus:ring-emerald-500 text-emerald-50">
+                          <SelectValue placeholder="Select level" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-900 border-emerald-900/30 text-emerald-50">
+                          {EXPERIENCE_LEVELS.map((option) => (
+                            <SelectItem
+                              key={option.value}
+                              value={option.value}
+                              className="focus:bg-emerald-900/30 focus:text-emerald-200"
+                            >
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="duration" className="text-emerald-200">
+                        Project Duration (in days)
+                      </Label>
+                      <Input
+                        id="duration"
+                        name="duration"
+                        type="number"
+                        min="1"
+                        placeholder="e.g., 2, 30, 365, etc."
+                        value={formData.duration}
+                        onChange={handleChange}
+                        required
+                        className="bg-gray-900/70 border-emerald-900/30 focus:border-emerald-500 text-emerald-50 placeholder:text-emerald-200/30"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <CardFooter className="flex justify-center gap-4 px-0 pt-4">
-                <Button
-                  type="button"
-                  onClick={() => navigate(-1)}
-                  className="bg-gray-600 hover:bg-gray-500 text-white"
-                >
-                  Back
-                </Button>
+              <div className="pt-4 flex justify-end">
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-emerald-400 hover:bg-emerald-300 text-black"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-black font-medium px-6 py-2 h-auto rounded-full transition-all duration-200 flex items-center gap-2 group"
                 >
                   {isSubmitting ? "Posting..." : "Post Job"}
+                  <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
-              </CardFooter>
+              </div>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <div className="flex items-center gap-2 text-emerald-500/60 text-sm">
+              <Briefcase className="h-4 w-4" />
+              <span>All jobs are secured with smart contracts on the blockchain</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
