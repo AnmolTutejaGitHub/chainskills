@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
+import {ChainskillNFT} from "./ChainskillNFT.sol";
+
 contract Chainskill{
 
     error ListingCanOnlyBeAssignedOneTime();
@@ -102,6 +104,22 @@ contract Chainskill{
 
     address [] public companies;
     address [] public devs;
+
+
+
+     ChainskillNFT public chainskillNFTContract;
+    address public owner;
+
+    constructor(){
+        owner = msg.sender;
+    }
+
+    function setNftContractAddress(address addr) public {
+        if (msg.sender != owner) revert UnAuthorisedAccess();
+        chainskillNFTContract = ChainskillNFT(addr);
+    }
+
+
 
    function registerDev(address addr, string memory name, string memory email, string[] memory skills, string memory avail, uint256 hourlyRate, string memory bio) public {
 
@@ -388,6 +406,13 @@ contract Chainskill{
                 DevMap[listings[i].devAddr].rating = (DevMap[listings[i].devAddr].rating + DevRating)/(DevMap[listings[i].devAddr].peopleRated + 1);
                 DevMap[listings[i].devAddr].peopleRated+=1;
 
+                chainskillNFTContract.mintNft(
+                    listings[i].devAddr,
+                    CompanyMap[companyAddr].name,
+                    companyAddr,
+                    listings[i].topic
+                );
+
                 break;
             }
         }
@@ -520,6 +545,14 @@ contract Chainskill{
         if(DevMap[addr].addr!=address(0)) return 0;
         if(CompanyMap[addr].addr!=address(0)) return 1;
         return 2;
+    }
+
+    function getTotalnftsAwarded(address devAddr) public returns(uint256){
+        return chainskillNFTContract.totalNftsAwarded(devAddr);
+    }
+
+    function getNFTsOfDev(address devAddr) public returns(string[] memory){
+        return  chainskillNFTContract.getAllNftsOfFreelancer(devAddr);
     }
 
 }

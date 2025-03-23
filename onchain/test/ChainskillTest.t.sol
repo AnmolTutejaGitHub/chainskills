@@ -5,9 +5,11 @@ import {Test} from "../lib/forge-std/src/Test.sol";
 import "../lib/forge-std/src/console.sol";
 import {DeployChainskill} from "../script/DeployChainskill.s.sol";
 import {Chainskill} from "../src/Chainskill.sol";
+import {ChainskillNFT} from "../src/ChainskillNFT.sol";
 
 contract ChainskillTest is Test{
    Chainskill cs;
+   ChainskillNFT nf;
 
    string constant EMAIL = "testuser@gmail.com";
    string constant NAME = "test";
@@ -34,7 +36,7 @@ contract ChainskillTest is Test{
 
    function setUp() external{
       DeployChainskill deployChainskill = new DeployChainskill();
-      cs = deployChainskill.run();
+      (cs, nf) = deployChainskill.run();
       vm.deal(COMPANY, 100 ether);
    }
 
@@ -460,5 +462,33 @@ contract ChainskillTest is Test{
       vm.prank(PLAYER);
       uint256 Ptype = cs.checkAddressIsDevCompanyOrDoesNotExist(PLAYER);
       assert(Ptype==2);
+   }
+
+   function testIsDevReallyAwardedNFT() public RegisterCompany RegisterDev{
+      vm.prank(COMPANY);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
+
+      vm.prank(PLAYER);
+      cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
+
+      vm.prank(COMPANY);
+      cs.selectBidder(UUID, COMPANY, PLAYER , CHARGES);
+
+      vm.prank(COMPANY);
+      cs.MarkProjectCompleteAndPayDev{value: CHARGES}(UUID, COMPANY, 4);
+
+      vm.prank(PLAYER);
+      uint256 nftsOwnedByThisAddr = nf.balanceOf(PLAYER);
+      assert(nftsOwnedByThisAddr == 1);
+
+     string memory tokenUri = nf.tokenURI(0);
+     console.log(tokenUri);
+
+     vm.prank(PLAYER);
+     uint256 totalNFTSofThisAddr = cs.getTotalnftsAwarded(PLAYER);
+     assert(totalNFTSofThisAddr == 1);
+
+     vm.prank(PLAYER);
+     cs.getNFTsOfDev(PLAYER);
    }
 }
