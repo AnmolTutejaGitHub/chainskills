@@ -94,8 +94,6 @@ export async function postJob(data) {
     
     const uuid = uuidv4();
     const id = parseInt(uuid.replace(/-/g, "").slice(0, 8), 16);
-
-    const durationInSecs = duration * 24 * 60 * 60;
     console.log(experienceLevel);
 
     let difficulty = 0;
@@ -113,7 +111,7 @@ export async function postJob(data) {
       title,
       description,
       skills,
-      durationInSecs,
+      duration,
       ethers.parseEther(budget),
       difficulty
     );
@@ -148,4 +146,29 @@ export async function getCompanyListings() {
     console.error("Error saving freelancer profile:", error);
     throw error;
   }
+}
+
+export async function getClientApplications(){
+  if (!window.ethereum) {
+    throw new Error(
+      "Ethereum provider is not available. Please install MetaMask."
+    );
+  }
+
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const accounts = await provider.send("eth_requestAccounts", []);
+    const addr = accounts[0];
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+
+    const result = await contract.getAllCompanyProposals(addr);
+
+    console.log("application Data: ", result);
+    return result;
+  } catch (error) {
+    console.error("Error saving freelancer profile:", error);
+    throw error;
+  }
+
 }

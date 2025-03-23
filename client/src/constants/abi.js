@@ -1,5 +1,10 @@
 const abi = [
     {
+        "type": "constructor",
+        "inputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
         "type": "function",
         "name": "CompanyListing",
         "inputs": [
@@ -69,6 +74,16 @@ const abi = [
                 "name": "difficulty",
                 "type": "uint8",
                 "internalType": "enum Chainskill.ProjectDifficulty"
+            },
+            {
+                "name": "applicantCount",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "companyName",
+                "type": "string",
+                "internalType": "string"
             }
         ],
         "stateMutability": "view"
@@ -241,6 +256,16 @@ const abi = [
                 "name": "difficulty",
                 "type": "uint8",
                 "internalType": "enum Chainskill.ProjectDifficulty"
+            },
+            {
+                "name": "applicantCount",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "companyName",
+                "type": "string",
+                "internalType": "string"
             }
         ],
         "stateMutability": "view"
@@ -315,6 +340,16 @@ const abi = [
                 "name": "difficulty",
                 "type": "uint8",
                 "internalType": "enum Chainskill.ProjectDifficulty"
+            },
+            {
+                "name": "applicantCount",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "companyName",
+                "type": "string",
+                "internalType": "string"
             }
         ],
         "stateMutability": "view"
@@ -448,6 +483,16 @@ const abi = [
                 "name": "difficulty",
                 "type": "uint8",
                 "internalType": "enum Chainskill.ProjectDifficulty"
+            },
+            {
+                "name": "applicantCount",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "companyName",
+                "type": "string",
+                "internalType": "string"
             }
         ],
         "stateMutability": "view"
@@ -576,6 +621,19 @@ const abi = [
     },
     {
         "type": "function",
+        "name": "chainskillNFTContract",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "contract ChainskillNFT"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
         "name": "checkAddressIsDevCompanyOrDoesNotExist",
         "inputs": [
             {
@@ -640,6 +698,97 @@ const abi = [
                 "name": "",
                 "type": "address[]",
                 "internalType": "address[]"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getAllCompanyProposals",
+        "inputs": [
+            {
+                "name": "companyAddr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "tuple[]",
+                "internalType": "struct Chainskill.Listing[]",
+                "components": [
+                    {
+                        "name": "ListingUUID",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "topic",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "skillsReq",
+                        "type": "string[]",
+                        "internalType": "string[]"
+                    },
+                    {
+                        "name": "duration",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "budget",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "status",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.ListingStatus"
+                    },
+                    {
+                        "name": "devAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "devFees",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "ListedOn",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "difficulty",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
+                    }
+                ]
             }
         ],
         "stateMutability": "view"
@@ -756,6 +905,16 @@ const abi = [
                         "name": "difficulty",
                         "type": "uint8",
                         "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
                     }
                 ]
             }
@@ -898,6 +1057,16 @@ const abi = [
                         "name": "difficulty",
                         "type": "uint8",
                         "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
                     }
                 ]
             }
@@ -979,6 +1148,16 @@ const abi = [
                         "name": "difficulty",
                         "type": "uint8",
                         "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
                     }
                 ]
             }
@@ -1060,6 +1239,16 @@ const abi = [
                         "name": "difficulty",
                         "type": "uint8",
                         "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
                     }
                 ]
             }
@@ -1133,6 +1322,129 @@ const abi = [
                         "internalType": "uint256"
                     }
                 ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getNFTsOfDev",
+        "inputs": [
+            {
+                "name": "devAddr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "string[]",
+                "internalType": "string[]"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getOpenListings",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "tuple[]",
+                "internalType": "struct Chainskill.Listing[]",
+                "components": [
+                    {
+                        "name": "ListingUUID",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "topic",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "skillsReq",
+                        "type": "string[]",
+                        "internalType": "string[]"
+                    },
+                    {
+                        "name": "duration",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "budget",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "status",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.ListingStatus"
+                    },
+                    {
+                        "name": "devAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "devFees",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "ListedOn",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "difficulty",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
+                    }
+                ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getTotalnftsAwarded",
+        "inputs": [
+            {
+                "name": "devAddr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
             }
         ],
         "stateMutability": "view"
@@ -1263,8 +1575,31 @@ const abi = [
                         "name": "difficulty",
                         "type": "uint8",
                         "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
                     }
                 ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "owner",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
             }
         ],
         "stateMutability": "view"
@@ -1401,6 +1736,19 @@ const abi = [
                 "internalType": "string"
             }
         ],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "setNftContractAddress",
+        "inputs": [
+            {
+                "name": "addr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [],
         "stateMutability": "nonpayable"
     },
     {

@@ -27,6 +27,7 @@ contract ChainskillTest is Test{
    uint256 constant CHARGES = 1010;
    string constant COVER_LETTER = "cover_letter";
    uint256 constant  DIFFICULTY = 1;
+   uint256 constant APPLICANT_COUNT = 0;
 
 
    address public PLAYER = makeAddr("player");

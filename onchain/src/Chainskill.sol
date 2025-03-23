@@ -88,6 +88,8 @@ contract Chainskill{
         uint256 devFees;
         uint256 ListedOn;
         ProjectDifficulty difficulty;
+        uint256 applicantCount;
+        string companyName;
         // address[] devsApplied; // logic in mapping DevAppliedProjectMapping
     }
 
@@ -218,7 +220,10 @@ contract Chainskill{
             devFees : 0,
             budget : budget,
             ListedOn : block.timestamp,
-            difficulty : ProjectDifficulty(difficulty)
+            difficulty : ProjectDifficulty(difficulty),
+            applicantCount : 0,
+            companyName : CompanyMap[companyAddr].name
+
         })
         );
 
@@ -289,6 +294,7 @@ contract Chainskill{
             if(listings[i].ListingUUID == projectID){
                 if(listings[i].status!=ListingStatus.OPEN) revert ListingIsClosed();
                 DevTotalAppliedProjects[devAddr].push(listings[i]);
+                listings[i].applicantCount+=1;
             }
         }
 
@@ -581,6 +587,11 @@ contract Chainskill{
 
     function getNFTsOfDev(address devAddr) public view returns(string[] memory){
         return  chainskillNFTContract.getAllNftsOfFreelancer(devAddr);
+    }
+
+    function getAllCompanyProposals(address companyAddr) public view returns(Listing[] memory){
+        if(msg.sender!=companyAddr) revert UnAuthorisedAccess();
+        return CompanyListing[companyAddr];
     }
 
 }

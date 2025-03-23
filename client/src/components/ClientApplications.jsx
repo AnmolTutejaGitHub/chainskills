@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { Star } from "lucide-react"
+import {getClientApplications} from "../lib/company"
 
 const mockClientApplications = [
     {
@@ -49,6 +50,12 @@ const mockClientApplications = [
     },
 ]
 
+// const  NormalizedApplicationsData = (rawData) => {
+//     return rawData.map((job) => ({
+       
+//     }));
+// };
+
 export default function ClientApplications() {
     const [applications, setApplications] = useState([])
     const [loading, setLoading] = useState(true)
@@ -56,8 +63,10 @@ export default function ClientApplications() {
     useEffect(() => {
         const fetchApplications = async () => {
             try {
-                // const applicationsData = await getClientApplications()
-                setApplications(mockClientApplications)
+                const rawApplicationsData = await getClientApplications();
+                console.log("appl",rawApplicationsData);
+                // const NormalizedApplicationsData = normalise(rawApplicationsData);
+                // setApplications(NormalizedApplicationsData);
             } catch (error) {
                 console.error("Error fetching applications:", error)
             } finally {

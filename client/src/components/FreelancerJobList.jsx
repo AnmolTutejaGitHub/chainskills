@@ -4,6 +4,7 @@ import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { Briefcase, Clock, Coins } from "lucide-react"
 // import { getAvailableJobs } from "@/lib/jobs"
+import {getAvailableJobs} from "../lib/freelancer";
 
 const mockAvailableJobs = [
     {
@@ -47,6 +48,23 @@ const mockAvailableJobs = [
     },
 ]
 
+const normalizeJobs = (rawJobs) => {
+  return rawJobs.map((job) => ({
+      id: job[0].toString(),
+      title: job[2],
+      description: job[3],
+      skills: Object.values(job[4]),
+      jobType: "hourly",
+      budget: Number(job[6]) / 1e18,
+      postedAt: (new Date(Number(job[10]) * 1000)).toLocaleDateString(),
+      status: job[11] === 1n ? "active" : "closed",
+      applicantsCount: Number(job[12]),
+      duration : Number(job[6]),
+      companyName : job[13],
+      experienceLevel: job[11] === 0n ? "beginner" : job[11] === 1n ? "intermediate" : "expert"
+  }));
+};
+
 export default function FreelancerJobList() {
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
@@ -54,8 +72,9 @@ export default function FreelancerJobList() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        // const jobsData = await getAvailableJobs()
-        setJobs(mockAvailableJobs)
+        const jobsData = await getAvailableJobs()
+        const normalised = normalizeJobs(jobsData);
+        setJobs(normalised);
       } catch (error) {
         console.error("Error fetching jobs:", error)
       } finally {
@@ -103,7 +122,7 @@ export default function FreelancerJobList() {
             <div className="grid grid-cols-3 gap-2 text-sm">
               <div className="flex items-center gap-1">
               <Coins className="h-4 w-4 text-muted-foreground" />
-                <span className="text-gray-400">{job.jobType === "fixed" ? `${job.budget} fixed` : `${job.budget}/hr`}</span>
+                <span className="text-gray-400">{job.jobType === "fixed" ? `${job.budget} fixed` : `${job.budget} ETH`}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Briefcase className="h-4 w-4 text-muted-foreground" />
@@ -111,7 +130,7 @@ export default function FreelancerJobList() {
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="text-gray-400">{job.duration}</span>
+                <span className="text-gray-400">{job.duration} Days</span>
               </div>
             </div>
           </CardContent>

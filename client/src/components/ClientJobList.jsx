@@ -50,7 +50,7 @@ const normalizeJobs = (rawJobs) => {
         skills: Object.values(job[4]),
         jobType: "hourly",
         budget: Number(job[6]) / 1e18,
-        postedAt: new Date(Number(job[10])).toLocaleDateString(),
+     postedAt: (new Date(Number(job[10]) * 1000)).toLocaleDateString(),
         status: job[11] === 1n ? "active" : "closed",
         applicantsCount: Number(job[9]),
     }));
