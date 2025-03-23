@@ -7,7 +7,14 @@ export const useAuthStore = create((set) => ({
   isLoading: false,
   isCheckingAuth: true,
 
-  connect: async () => {},
+  checkAuth: () => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      set({ user: JSON.parse(user), isAuthenticated: true, isCheckingAuth: false });
+    } else {
+      set({ isCheckingAuth: false });
+    }
+  },
   logout: async () => {
     localStorage.clear();
     set({ user: null, isAuthenticated: false, error: null });

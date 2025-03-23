@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { Button } from "../../components/ui/button"
@@ -10,22 +10,38 @@ import FreelancerJobList from "../../components/FreelancerJobList"
 import FreelancerApplications from "../../components/FreelancerApplications"
 import FreelancerCertifications from "../../components/FreelancerCertifications"
 import { getUserProfileData } from "../../lib/freelancer"
+import { ethers } from "ethers"
 
 export default function FreelancerDashboard() {
-  // This would normally be fetched from an API
-  const freelancerProfile = {
-    name: "Pulkit Garg",
-    title: "Full Stack Web Developer",
-    hourlyRate: 75,
-    skills: ["JavaScript", "React", "Next.js", "TypeScript"],
-    completedJobs: 12,
-    rating: 5,
-    earnings: 0,
-    certifications: 5,
-  }
+  const [freelancerProfile, setFreelancerProfile] = useState({
+    name: "",
+    title: "",
+    hourlyRate: "0.0",
+    skills: [],
+    completedJobs: 0,
+    rating: 0,
+    earnings: "0.0",
+  });
 
   useEffect(() => {
-    getUserProfileData();
+    const fetchData = async () => {
+      const result = await getUserProfileData();
+      console.log("Result: ", result);
+
+      setFreelancerProfile({
+        name: result[1],
+        title: result[6],
+        hourlyRate: ethers.formatUnits(result[5], 18),
+        skills: result[3],
+        completedJobs: Number(result[9], 10),
+        rating: Number(result[7], 10),
+        earnings: ethers.formatUnits(result[8], 18),
+      });
+
+      console.log("Freelancer profile", freelancerProfile);
+    }
+
+    fetchData();
   }, []);
 
   return (
@@ -38,12 +54,12 @@ export default function FreelancerDashboard() {
               <div className="flex justify-between items-start">
                 <Avatar className="h-16 w-16">
                   <AvatarImage src="/placeholder.svg?height=64&width=64" alt={freelancerProfile.name} />
-                  <AvatarFallback className="bg-emerald-200 text-xl font-semibold">{freelancerProfile.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="bg-emerald-200 text-xl font-semibold">{"P"}</AvatarFallback>
                 </Avatar>
                 <a href="/dashboard/freelancer/edit-profile">
-                <Button className="bg-emerald-400 border-0 hover:bg-emerald-300 cursor-pointer" variant="outline" size="sm">
-                  Edit Profile
-                </Button>
+                  <Button className="bg-emerald-400 border-0 hover:bg-emerald-300 cursor-pointer" variant="outline" size="sm">
+                    Edit Profile
+                  </Button>
                 </a>
               </div>
               <CardTitle className="mt-4 text-emerald-300 text-2xl">{freelancerProfile.name}</CardTitle>

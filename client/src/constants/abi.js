@@ -576,6 +576,25 @@ const abi = [
     },
     {
         "type": "function",
+        "name": "checkAddressIsDevCompanyOrDoesNotExist",
+        "inputs": [
+            {
+                "name": "addr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
         "name": "companies",
         "inputs": [
             {
@@ -1317,12 +1336,12 @@ const abi = [
                 "internalType": "address"
             },
             {
-                "name": "email",
+                "name": "name",
                 "type": "string",
                 "internalType": "string"
             },
             {
-                "name": "name",
+                "name": "email",
                 "type": "string",
                 "internalType": "string"
             },

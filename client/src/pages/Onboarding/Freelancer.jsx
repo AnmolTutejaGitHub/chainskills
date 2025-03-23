@@ -182,14 +182,15 @@ export default function FreelancerOnboarding() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label htmlFor="hourlyRate" className="block text-sm font-medium text-gray-200">
-                  Hourly Rate (USD)
+                  Hourly Rate (ETH)
                 </label>
                 <input
                   id="hourlyRate"
                   name="hourlyRate"
                   type="number"
-                  min="1"
-                  placeholder="50"
+                  min="0"
+                  step="any"
+                  placeholder="0.00056"
                   value={formData.hourlyRate}
                   onChange={handleChange}
                   required
@@ -199,13 +200,13 @@ export default function FreelancerOnboarding() {
 
               <div className="space-y-2">
                 <label htmlFor="avail" className="block text-sm font-medium text-gray-200">
-                  avail
+                  TimeZone
                 </label>
                 <select
                   value={formData.avail}
                   onChange={(e) => handleChange(e)}
                   name="avail"
-                  className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm hover:border-green-400 bg-[#0f172a] transform transition-transform duration-200"
+                  className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-black transform transition-transform duration-200"
                 >
                   <option value="" disabled>
                     Select your avail

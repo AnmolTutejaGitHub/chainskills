@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { Button } from "../../components/ui/button"
@@ -7,15 +8,45 @@ import ClientJobList from "../../components/ClientJobList"
 import ClientApplications from "../../components/ClientApplications"
 import ClientActiveContracts from "../../components/ClientActiveContracts"
 import Header from "../../components/dashboard/Header";
+import { getCompanyData } from "../../lib/company";
 
 export default function ClientDashboard() {
-  const clientProfile = {
-    companyName: "Google",
-    industry: "Technology",
-    jobsPosted: 8,
-    activeContracts: 3,
-    totalSpent: 563,
-  }
+  const [companyProfile, setCompanyProfile] = useState({    
+    companyName: "",
+    description: "",
+    industry: "",
+    jobsPosted: 0,
+    activeContracts: 0,
+    totalSpent: 0
+  });
+
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        const result = await getCompanyData();
+        console.log("Result: ", result);
+  
+        setCompanyProfile({
+          companyName: result[1],
+          description: result[7],
+          industry: result[5],
+          jobsPosted: 0,
+          activeContracts: 0,
+          totalSpent: 0
+          // name: result[1],
+          // title: result[6],
+          // hourlyRate: ethers.formatUnits(result[5], 18),
+          // skills: result[3],
+          // completedJobs: Number(result[9], 10),
+          // rating: Number(result[7], 10),
+          // earnings: ethers.formatUnits(result[8], 18),
+        });
+  
+        console.log("Freelancer profile", companyProfile);
+      }
+  
+      fetchData();
+    }, []);
 
   return (
     <div className="min-h-screen bg-black">
@@ -26,8 +57,8 @@ export default function ClientDashboard() {
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <Avatar className="h-16 w-16">
-                  <AvatarImage src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt={clientProfile.companyName} />
-                  <AvatarFallback>{clientProfile.companyName.charAt(0)}</AvatarFallback>
+                  <AvatarImage src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt={companyProfile.companyName} />
+                  <AvatarFallback>{companyProfile.companyName.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <a href="/dashboard/client/edit-profile">
                   <Button className="bg-emerald-400 border-0 hover:bg-emerald-300 cursor-pointer" variant="outline" size="sm">
@@ -35,25 +66,26 @@ export default function ClientDashboard() {
                   </Button>
                 </a>
               </div>
-              <CardTitle className="mt-4 text-emerald-300 text-2xl">{clientProfile.companyName}</CardTitle>
-              <CardDescription className="text-gray-300">{clientProfile.industry}</CardDescription>
+              <CardTitle className="mt-4 text-emerald-300 text-2xl">{companyProfile.companyName}</CardTitle>
+              <CardDescription className="text-gray-300">{companyProfile.description}</CardDescription>
+              <CardDescription className="text-emerald-300">{companyProfile.industry}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div className="space-y-1">
                     <div className="text-sm text-emerald-300">Jobs Posted</div>
-                    <div className="text-xl font-bold text-white">{clientProfile.jobsPosted}</div>
+                    <div className="text-xl font-bold text-white">{companyProfile.jobsPosted}</div>
                   </div>
                   <div className="space-y-1">
                     <div className="text-sm text-emerald-300">Active Contracts</div>
-                    <div className="text-xl font-bold text-white">{clientProfile.activeContracts}</div>
+                    <div className="text-xl font-bold text-white">{companyProfile.activeContracts}</div>
                   </div>
                 </div>
 
                 <div className="pt-2">
                   <div className="text-sm text-emerald-300">Total Spent</div>
-                  <div className="text-2xl font-bold text-white">ETH. {clientProfile.totalSpent}</div>
+                  <div className="text-2xl font-bold text-white">ETH. {companyProfile.totalSpent}</div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">

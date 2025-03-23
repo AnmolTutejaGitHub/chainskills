@@ -10,7 +10,9 @@ export async function saveFreelancerProfile(profileData) {
   }
 
   if (!window.ethereum) {
-    throw new Error("Ethereum provider is not available. Please install MetaMask.");
+    throw new Error(
+      "Ethereum provider is not available. Please install MetaMask."
+    );
   }
 
   try {
@@ -22,7 +24,7 @@ export async function saveFreelancerProfile(profileData) {
     const contract = new ethers.Contract(contractAddress, abi, signer);
 
     const tx = await contract.registerDev(
-    addr,
+      addr,
       name,
       email,
       skills,
@@ -31,10 +33,14 @@ export async function saveFreelancerProfile(profileData) {
       bio
     );
 
-
     await tx.wait();
 
-    console.log("Freelancer profile saved successfully on blockchain and backend!");
+    const user = { address: addr, type: "freelancer" };
+    localStorage.setItem("user", JSON.stringify(user));
+
+    console.log(
+      "Freelancer profile saved successfully on blockchain and backend!"
+    );
   } catch (error) {
     console.error("Error saving freelancer profile:", error);
     throw error;
@@ -43,7 +49,9 @@ export async function saveFreelancerProfile(profileData) {
 
 export async function getUserProfileData() {
   if (!window.ethereum) {
-    throw new Error("Ethereum provider is not available. Please install MetaMask.");
+    throw new Error(
+      "Ethereum provider is not available. Please install MetaMask."
+    );
   }
 
   try {
@@ -51,12 +59,12 @@ export async function getUserProfileData() {
     const accounts = await provider.send("eth_requestAccounts", []);
     const addr = accounts[0];
     const signer = await provider.getSigner();
-    console.log("Addr: ", addr, "Signer: ", signer);
     const contract = new ethers.Contract(contractAddress, abi, signer);
 
-    const tx = await contract.getDevProfileData(addr);
+    const result = await contract.getDevProfileData(addr);
 
-    console.log("User Data: ", tx);
+    console.log("User Data: ", result);
+    return result;
   } catch (error) {
     console.error("Error saving freelancer profile:", error);
     throw error;
