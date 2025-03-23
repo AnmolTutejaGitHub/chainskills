@@ -109,6 +109,10 @@ contract Chainskill{
             revert ProfileAlreadyExists();
         }
 
+        if(CompanyMap[addr].addr !=address(0)){
+            revert ProfileAlreadyExists();
+        }
+
         if(msg.sender!=addr){
             revert UnAuthorisedAccess();
         }
@@ -133,6 +137,10 @@ contract Chainskill{
     }
 
     function registerCompany(address addr, string memory name, string memory email,string memory industry,string memory website ,string memory description) public {
+
+        if(DevMap[addr].addr!=address(0)){
+            revert ProfileAlreadyExists();
+        }
 
         if(CompanyMap[addr].addr !=address(0)){
             revert ProfileAlreadyExists();
@@ -506,6 +514,12 @@ contract Chainskill{
     function getDevInProgressProjects(address DevAddr) public view returns(Listing[] memory){
         if(DevMap[DevAddr].addr==address(0)) revert ProfileDoesNotExist();
         return DevInProgressProjects[DevAddr];
+    }
+
+    function checkAddressIsDevCompanyOrDoesNotExist(address addr) public view returns(uint256){
+        if(DevMap[addr].addr!=address(0)) return 0;
+        if(CompanyMap[addr].addr!=address(0)) return 1;
+        return 2;
     }
 
 }

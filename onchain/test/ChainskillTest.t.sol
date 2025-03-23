@@ -428,4 +428,37 @@ contract ChainskillTest is Test{
       assert(status_3==2);
       assert(status_4==1);
    }
+
+   function testCantRegisterAsCompanyIfRegisterAsDev() public{
+      vm.prank(PLAYER);
+      cs.registerDev(PLAYER, EMAIL,NAME,skills,AVAIL, perHour , BIO);
+
+      vm.expectRevert(Chainskill.ProfileAlreadyExists.selector);
+      vm.prank(PLAYER);
+      cs.registerCompany(PLAYER, NAME, EMAIL, INDUSTRY, WEBSITE, DESCRIPTION);
+   }
+
+   function testReturnRegisterAsDev() public {
+      vm.prank(PLAYER);
+      cs.registerDev(PLAYER, EMAIL,NAME,skills,AVAIL, perHour , BIO);
+
+      vm.prank(PLAYER);
+      uint256 Ptype = cs.checkAddressIsDevCompanyOrDoesNotExist(PLAYER);
+      assert(Ptype==0);
+   }
+
+     function testReturnRegisterAsCompany() public {
+      vm.prank(PLAYER);
+      cs.registerCompany(PLAYER, NAME, EMAIL, INDUSTRY, WEBSITE, DESCRIPTION);
+
+      vm.prank(PLAYER);
+      uint256 Ptype = cs.checkAddressIsDevCompanyOrDoesNotExist(PLAYER);
+      assert(Ptype==1);
+   }
+
+    function testReturnsDidNotRegister() public {
+      vm.prank(PLAYER);
+      uint256 Ptype = cs.checkAddressIsDevCompanyOrDoesNotExist(PLAYER);
+      assert(Ptype==2);
+   }
 }
