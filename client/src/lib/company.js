@@ -172,3 +172,28 @@ export async function getClientApplications(){
   }
 
 }
+
+export async function getApplicationsToAProject(uuid){
+  if (!window.ethereum) {
+    throw new Error(
+      "Ethereum provider is not available. Please install MetaMask."
+    );
+  }
+
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const accounts = await provider.send("eth_requestAccounts", []);
+    const addr = accounts[0];
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+
+    const result = await contract.getWhoBiddedForProject(uuid);
+
+    console.log("Listing Applied Data: ", result);
+    return result;
+  } catch (error) {
+    console.error("Error saving freelancer profile:", error);
+    throw error;
+  }
+
+}

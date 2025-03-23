@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { getCompanyListings } from "../lib/company"
+import { useNavigate } from "react-router-dom"
 
 const mockClientJobs = [
     {
@@ -61,6 +62,7 @@ const normalizeJobs = (rawJobs) => {
 export default function ClientJobList() {
     const [jobs, setJobs] = useState([])
     const [loading, setLoading] = useState(true)
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchJobs = async () => {
@@ -96,7 +98,7 @@ export default function ClientJobList() {
     return (
         <div className="space-y-4">
             {jobs.map((job) => (
-                <Card key={job.id} className="bg-black border-gray-600">
+                <Card key={job.id} className="bg-black border-gray-600" onClick={()=>navigate(`/dashboard/client/applications/${job.id}`)}>
                     <CardHeader className="pb-2">
                         <div className="flex justify-between items-start">
                             <div>
