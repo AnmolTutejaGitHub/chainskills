@@ -3,21 +3,6 @@ import { ArrowRight, X, Wallet, Info, Layers, Users } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { ethers } from "ethers";
 import { motion } from "motion/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../components/ui/carousel";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -185,7 +170,7 @@ export default function Home() {
                         togglePopup();
                       }}
                       size="lg"
-                      className="w-full bg-emerald-500 text-black text-lg hover:bg-emerald-600"
+                      className="w-full bg-emerald-500 text-black text-lg hover:bg-emerald-600 cursor-pointer"
                     >
                       Join as Freelancer
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -199,7 +184,7 @@ export default function Home() {
                       }}
                       size="lg"
                       variant="outline"
-                      className="w-full bg-emerald-500 text-black text-lg hover:bg-emerald-600"
+                      className="w-full bg-emerald-500 text-black text-lg hover:bg-emerald-600 cursor-pointer"
                     >
                       Hire Talent
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -208,7 +193,18 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex justify-center">
-                <div className="relative w-full max-w-[500px] aspect-video rounded-xl bg-transparent border-2 border-emerald-500">
+                <motion.div
+                  animate={{
+                    y: [0, 25, 0],
+                    transition: {
+                      ease: ["easeIn", "easeOut"],
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    },
+                  }}
+                  className="relative w-full max-w-[500px] aspect-video rounded-xl bg-transparent border-2 border-emerald-500"
+                >
                   <div className="absolute inset-0 flex items-center justify-center text-white">
                     <div className="text-center ">
                       <div
@@ -225,7 +221,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
@@ -384,35 +380,117 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-emerald-400">
-                  Trusted by leading brands and startups
+                  Here's what ourcustomers have to say
                 </h2>
                 <p className="max-w-[900px] text-gray-400 md:text-xl">
-                  Experience a seamless journey in Web3 freelancing with these
-                  simple steps.
+                  Discover how our service can benefit you .
                 </p>
               </div>
-              <Carousel className="w-full max-w-xs">
-                <CarouselContent>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <CarouselItem key={index}>
-                      <div className="p-1">
-                        <Card className="bg-zinc-900  border border-emerald-500">
-                          <CardHeader>
-                            <CardTitle>
-                              <img src="" alt="" />
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="flex h-[400px] items-center justify-center p-6">
-                            <span className="text-4xl font-semibold"></span>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
+            </div>
+            <div>
+              <section class="max-w-5xl mx-auto w-full px-10 py-10">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 w-full">
+                  <div class="border p-7 rounded-xl bg-neutral-900 drop-shadow-md border-neutral-800/50 col-span-2 flex flex-col gap-y-10 justify-between">
+                    <div class="flex flex-col gap-y-3.5">
+                      <p class="font-bold text-xl text-white">
+                        Efficient customer support
+                      </p>
+                      <p class="font-medium text-white">
+                        The customer support team at our service is incredibly
+                        responsive and helpful. They went above and beyond to
+                        assist me with my issue.
+                      </p>
+                    </div>
+                    <div class="flex flex-col">
+                      <img
+                        src="https://randomuser.me/api/portraits/women/43.jpg"
+                        alt="Emily Smith"
+                        class="h-10 w-10"
+                      />
+                      <p class="pt-2 text-sm font-semibold text-white">
+                        Emily Smith
+                      </p>
+                      <p class="text-sm font-medium text-slate-100/70">
+                        Marketing Manager at ABC Company
+                      </p>
+                    </div>
+                  </div>
+                  <div class="border p-7 rounded-xl bg-neutral-900 drop-shadow-md border-neutral-800/50 col-span-3 flex flex-col gap-y-10 justify-between">
+                    <div class="flex flex-col gap-y-3.5">
+                      <p class="font-bold text-xl text-white">
+                        Excellent product features
+                      </p>
+                      <p class="font-medium text-white">
+                        The features offered by our service are outstanding.
+                        They have greatly improved our workflow and efficiency.
+                      </p>
+                    </div>
+                    <div class="flex flex-col">
+                      <img
+                        src="https://randomuser.me/api/portraits/men/34.jpg"
+                        alt="Michael Johnson"
+                        class="h-10 w-10"
+                      />
+                      <p class="pt-2 text-sm font-semibold text-white">
+                        Michael Johnson
+                      </p>
+                      <p class="text-sm font-medium text-slate-100/70">
+                        CEO at XYZ Corporation
+                      </p>
+                    </div>
+                  </div>
+                  <div class="border p-7 rounded-xl bg-neutral-900 drop-shadow-md border-neutral-800/50 col-span-3 flex flex-col gap-y-10 justify-between">
+                    <div class="flex flex-col gap-y-3.5">
+                      <p class="font-bold text-xl text-white">
+                        Seamless integration process
+                      </p>
+                      <p class="font-medium text-white">
+                        Integrating our systems with our service was smooth and
+                        hassle-free. The support team guided us through every
+                        step of the process.
+                      </p>
+                    </div>
+                    <div class="flex flex-col">
+                      <img
+                        src="https://randomuser.me/api/portraits/women/71.jpg"
+                        alt="Sarah Brown"
+                        class="h-10 w-10"
+                      />
+                      <p class="pt-2 text-sm font-semibold text-white">
+                        Sarah Brown
+                      </p>
+                      <p class="text-sm font-medium text-slate-100/70">
+                        CTO at XYZ Corporation
+                      </p>
+                    </div>
+                  </div>
+                  <div class="border p-7 rounded-xl bg-neutral-900 drop-shadow-md border-neutral-800/50 col-span-2 flex flex-col gap-y-10 justify-between">
+                    <div class="flex flex-col gap-y-3.5">
+                      <p class="font-bold text-xl text-white">
+                        Reliable service uptime
+                      </p>
+                      <p class="font-medium text-white">
+                        Our service has consistently maintained high uptime,
+                        ensuring that our operations run smoothly without any
+                        disruptions.
+                      </p>
+                    </div>
+                    <div class="flex flex-col">
+                      <img
+                        src="https://randomuser.me/api/portraits/men/71.jpg"
+                        alt="James White"
+                        class="h-10 w-10"
+                      />
+                      <p class="pt-2 text-sm font-semibold text-white">
+                        James White
+                      </p>
+                      <p class="text-sm font-medium text-slate-100/70">
+                        COO at XYZ Corporation
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </section>
