@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ArrowRight, X, Wallet, Info, Layers, Users } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { ethers } from "ethers";
+import { checkIfUserExists } from "../lib/login";
+
 import { motion } from "motion/react";
 
 export default function Home() {
@@ -19,24 +20,22 @@ export default function Home() {
       setIsConnecting(true);
 
       try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.send("eth_requestAccounts", []);
-        const seletedAccount = accounts[0];
-        console.log(`Connected as ${userType}:`, seletedAccount);
-        console.log(seletedAccount, " seletedAccount");
-      } catch (error) {
-        console.error("Error with Connection:", error);
-      } finally {
-        setIsConnecting(false);
-      }
-
-      setTimeout(() => {
-        if (userType === "client") {
-          window.location.href = "/onboarding/client";
-        } else if (userType === "freelancer") {
-          window.location.href = "/onboarding/freelancer";
+        const userExists = await checkIfUserExists();
+        if (userExists === 0) { // Freelancer
+          window.location.href = "/dashboard/freelancer";
+        } else if (userExists === 1) { // Client
+          window.location.href = "/dashboard/client";
+        } else if (userExists === 2) { // User does not exist
+          if (userType === "client") {
+            window.location.href = "/onboarding/client";
+          } else if (userType === "freelancer") {
+            window.location.href = "/onboarding/freelancer";
+          }
         }
-      }, 1000);
+      } catch (error) {
+        console.error("Error checking user existence:", error);
+        setError("Error fetching user data. Please try again.");
+      }
     } else {
       setError(
         "Failed to connect wallet. Please make sure MetaMask is installed and try again."

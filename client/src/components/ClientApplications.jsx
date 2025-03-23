@@ -109,7 +109,7 @@ export default function ClientApplications() {
                                 <AvatarFallback>{application.freelancerName.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <div className="font-medium">{application.freelancerName}</div>
+                                <div className="font-medium text-emerald-300">{application.freelancerName}</div>
                                 <div className="text-sm text-muted-foreground">{application.experience}</div>
                                 <div className="flex items-center mt-1">
                                     <div className="flex">
@@ -127,20 +127,20 @@ export default function ClientApplications() {
                                 </div>
                             </div>
                             <div className="ml-auto text-right">
-                                <div className="font-medium">${application.proposedRate}/hr</div>
+                                <div className="font-medium text-white">${application.proposedRate}/hr</div>
                                 <div className="text-sm text-muted-foreground">Proposed rate</div>
                             </div>
                         </div>
                         <div>
-                            <div className="text-sm font-medium mb-1">Cover Letter:</div>
-                            <p className="text-sm">{application.coverLetter}</p>
+                            <div className="text-sm font-medium mb-1 text-emerald-300">Cover Letter:</div>
+                            <p className="text-sm text-gray-200">{application.coverLetter}</p>
                         </div>
                     </CardContent>
                     {application.status === "pending" && (
-                        <CardFooter className="flex justify-end gap-2 border-t pt-4">
+                        <CardFooter className="flex justify-end gap-2 pt-4">
                             <Button variant="outline">Message</Button>
                             <Button variant="destructive">Decline</Button>
-                            <Button>Accept</Button>
+                            <Button variant="default">Accept</Button>
                         </CardFooter>
                     )}
                 </Card>

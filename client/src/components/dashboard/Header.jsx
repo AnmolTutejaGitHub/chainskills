@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { Wallet, LogOut, Layers } from "lucide-react";
 import { Button } from "../ui/button";
+import { useAuthStore } from "../../store/authStore";
 
 function Header() {
   const [account, setAccount] = useState(null);
   const [balance, setBalance] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
+  const { logout } = useAuthStore();
 
   const handleConnect = async () => {
     if (window.ethereum) {
@@ -20,13 +23,22 @@ function Header() {
         setBalance(ethers.formatEther(balance));
       } catch (error) {
         console.error("Error with Connection:", error);
+      } finally {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    handleConnect();
+  }, []);
 
   const handleLogout = () => {
     setAccount(null);
     setBalance(null);
+    logout();
   };
 
   const togglePopup = () => {
@@ -54,7 +66,15 @@ function Header() {
         </div>
 
         <div className="flex items-center gap-4 bg-black text-white p-2 rounded-lg">
-          {account ? (
+          {loading ? (
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-8 bg-gray-700 rounded-full animate-pulse"></div>
+              <div>
+                <div className="w-50 h-4 bg-gray-700 rounded animate-pulse mb-2"></div>
+                <div className="w-26 h-3 bg-gray-600 rounded animate-pulse"></div>
+              </div>
+            </div>
+          ) : account ? (
             <div className="relative flex items-center gap-2 cursor-pointer bg-gray-900 px-5 py-2 rounded-2xl" onClick={togglePopup}>
               <img
                 src={`https://api.dicebear.com/5.x/identicon/svg?seed=${account}`}

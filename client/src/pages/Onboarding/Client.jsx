@@ -1,17 +1,16 @@
-"use client";
-
 import { useState } from "react";
 import { Layers } from "lucide-react";
-// import { useRouter } from "next/navigation";
+import { useNavigate } from 'react-router-dom';
+import { saveCompanyProfile } from "../../lib/company"
 
 export default function ClientOnboarding() {
-  //   const router = useRouter();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    companyName: "",
-    companyEmail: "",
-    website: "",
+    name: "",
+    email: "",
     industry: "",
+    website: "",
     description: "",
   });
 
@@ -25,8 +24,8 @@ export default function ClientOnboarding() {
     setIsSubmitting(true);
 
     try {
-      // await saveClientProfile(formData);
-      //   router.push("/dashboard/client");
+      await saveCompanyProfile(formData);
+        navigate("/dashboard/client");
     } catch (error) {
       console.error("Error saving profile:", error);
     } finally {
@@ -54,29 +53,29 @@ export default function ClientOnboarding() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label htmlFor="companyName" className="block text-sm font-medium text-gray-200">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-200">
                   Company Name
                 </label>
                 <input
-                  id="companyName"
-                  name="companyName"
+                  id="name"
+                  name="name"
                   placeholder="Google Inc."
-                  value={formData.companyName}
+                  value={formData.name}
                   onChange={handleChange}
                   required
                   className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm"
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="companyEmail" className="block text-sm font-medium text-gray-200">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-200">
                   Company Email
                 </label>
                 <input
-                  id="companyEmail"
-                  name="companyEmail"
+                  id="email"
+                  name="email"
                   type="email"
                   placeholder="contact@google.com"
-                  value={formData.companyEmail}
+                  value={formData.email}
                   onChange={handleChange}
                   required
                   className="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm"

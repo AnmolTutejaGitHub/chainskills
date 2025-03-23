@@ -1,26 +1,48 @@
+import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { Button } from "../../components/ui/button"
 import { Badge } from "../../components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
-import { Briefcase, Star, Award, Clock } from "lucide-react"
+import { Briefcase, Star, Award, Clock, MessageSquare } from "lucide-react"
 import Header from "../../components/dashboard/Header"
 import FreelancerJobList from "../../components/FreelancerJobList"
 import FreelancerApplications from "../../components/FreelancerApplications"
 import FreelancerCertifications from "../../components/FreelancerCertifications"
+import { getUserProfileData } from "../../lib/freelancer"
+import { ethers } from "ethers"
 
 export default function FreelancerDashboard() {
-  // This would normally be fetched from an API
-  const freelancerProfile = {
-    name: "Pulkit Garg",
-    title: "Full Stack Web Developer",
-    hourlyRate: 75,
-    skills: ["JavaScript", "React", "Next.js", "TypeScript"],
-    completedJobs: 12,
-    rating: 5,
-    earnings: 0,
-    certifications: 5,
-  }
+  const [freelancerProfile, setFreelancerProfile] = useState({
+    name: "",
+    title: "",
+    hourlyRate: "0.0",
+    skills: [],
+    completedJobs: 0,
+    rating: 0,
+    earnings: "0.0",
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getUserProfileData();
+      console.log("Result: ", result);
+
+      setFreelancerProfile({
+        name: result[1],
+        title: result[6],
+        hourlyRate: ethers.formatUnits(result[5], 18),
+        skills: result[3],
+        completedJobs: Number(result[9], 10),
+        rating: Number(result[7], 10),
+        earnings: ethers.formatUnits(result[8], 18),
+      });
+
+      console.log("Freelancer profile", freelancerProfile);
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -32,11 +54,13 @@ export default function FreelancerDashboard() {
               <div className="flex justify-between items-start">
                 <Avatar className="h-16 w-16">
                   <AvatarImage src="/placeholder.svg?height=64&width=64" alt={freelancerProfile.name} />
-                  <AvatarFallback className="bg-emerald-200 text-xl font-semibold">{freelancerProfile.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="bg-emerald-200 text-xl font-semibold">{"P"}</AvatarFallback>
                 </Avatar>
-                <Button className="bg-emerald-400 border-0" variant="outline" size="sm">
-                  Edit Profile
-                </Button>
+                <a href="/dashboard/freelancer/edit-profile">
+                  <Button className="bg-emerald-400 border-0 hover:bg-emerald-300 cursor-pointer" variant="outline" size="sm">
+                    Edit Profile
+                  </Button>
+                </a>
               </div>
               <CardTitle className="mt-4 text-emerald-300 text-2xl">{freelancerProfile.name}</CardTitle>
               <CardDescription className="text-gray-300">{freelancerProfile.title}</CardDescription>
@@ -83,6 +107,13 @@ export default function FreelancerDashboard() {
                     <div className="text-sm text-gray-300">UTC+05:30</div>
                   </div>
                 </div>
+
+                <a href="/dashboard/messages">
+                  <Button variant="outline" className="w-full gap-2 cursor-pointer">
+                    <MessageSquare className="h-4 w-4" />
+                    Messages
+                  </Button>
+                </a>
               </div>
             </CardContent>
           </Card>
