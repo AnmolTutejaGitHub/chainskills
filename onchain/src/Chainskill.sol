@@ -474,6 +474,34 @@ contract Chainskill{
         }
     }
 
+    function getOpenListings() public view returns (Listing[] memory) {
+    uint256 openCount = 0;
+
+    for (uint256 i = 0; i < companies.length; i++) {
+        Listing[] memory allListings = CompanyListing[companies[i]];
+        for (uint256 j = 0; j < allListings.length; j++) {
+            if (allListings[j].status == ListingStatus.OPEN) {
+                openCount++;
+            }
+        }
+    }
+
+    Listing[] memory openListings = new Listing[](openCount);
+    uint256 idx = 0;
+
+    for (uint256 i = 0; i < companies.length; i++) {
+        Listing[] memory allListings = CompanyListing[companies[i]];
+        for (uint256 j = 0; j < allListings.length; j++) {
+            if (allListings[j].status == ListingStatus.OPEN) {
+                openListings[idx] = allListings[j];
+                idx++;
+            }
+        }
+    }
+
+    return openListings;
+}
+
 
     // function NFTGeneration(uint256 projectId,Listing project) private{
     //         ////
@@ -547,11 +575,11 @@ contract Chainskill{
         return 2;
     }
 
-    function getTotalnftsAwarded(address devAddr) public returns(uint256){
+    function getTotalnftsAwarded(address devAddr) public view returns(uint256){
         return chainskillNFTContract.totalNftsAwarded(devAddr);
     }
 
-    function getNFTsOfDev(address devAddr) public returns(string[] memory){
+    function getNFTsOfDev(address devAddr) public view returns(string[] memory){
         return  chainskillNFTContract.getAllNftsOfFreelancer(devAddr);
     }
 

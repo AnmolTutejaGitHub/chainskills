@@ -491,4 +491,20 @@ contract ChainskillTest is Test{
      vm.prank(PLAYER);
      cs.getNFTsOfDev(PLAYER);
    }
+
+   function testgetOpenListings() public RegisterCompany RegisterDev{
+      vm.prank(COMPANY);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
+
+      vm.prank(PLAYER);
+      cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
+
+      vm.prank(COMPANY);
+      cs.selectBidder(UUID, COMPANY, PLAYER , CHARGES);
+
+      vm.prank(COMPANY);
+      cs.addListing(345678,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
+
+      cs.getOpenListings();
+   }
 }
