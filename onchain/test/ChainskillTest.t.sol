@@ -508,4 +508,31 @@ contract ChainskillTest is Test{
 
       cs.getOpenListings();
    }
+
+   function testifApplicationStatusIsUpdating() public RegisterCompany RegisterDev{
+      vm.prank(COMPANY);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
+
+      vm.prank(PLAYER);
+      cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
+
+      vm.prank(COMPANY);
+      cs.selectBidder(UUID, COMPANY, PLAYER , CHARGES);
+
+      cs.getApplication(UUID, PLAYER);
+   }
+
+   function testProjectStatus() public RegisterCompany RegisterDev{
+      vm.prank(COMPANY);
+      cs.addListing(UUID,COMPANY,TOPIC,DESCRIPTION,skills,DURATION,BUDGET,DIFFICULTY);
+
+      vm.prank(PLAYER);
+      cs.applyToListing(UUID, PLAYER, CHARGES, COVER_LETTER);
+
+      vm.prank(COMPANY);
+      cs.selectBidder(UUID, COMPANY, PLAYER , CHARGES);
+
+      uint256 status = cs.isProjectPaid(UUID);
+      assert(status == 2);
+   }
 }

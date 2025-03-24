@@ -98,16 +98,28 @@ export default function ClientJobList() {
     return (
         <div className="space-y-4">
             {jobs.map((job) => (
-                <Card key={job.id} className="bg-black border-gray-600" onClick={()=>navigate(`/dashboard/client/applications/${job.id}`)}>
+                <Card key={job.id} className="bg-black border-gray-600" onClick={() => navigate(`/dashboard/client/applications/${job.id}`, {
+                    state: { status: job.status }
+                  })}>
                     <CardHeader className="pb-2">
                         <div className="flex justify-between items-start">
                             <div>
                                 <CardTitle className="text-emerald-500 text-lg">{job.title}</CardTitle>
                                 <CardDescription>Posted {job.postedAt}</CardDescription>
                             </div>
-                            <Badge variant={ job.status === "open" ? "default" : job.status === "assigned"? "secondary" : job.status === "closed" ? "outline" : "destructive" }>
-                                {job.status}
-                            </Badge>
+                            <Badge
+                                className={`${
+                                job.status === "open"
+                                ? "bg-gray-100 text-black" 
+                                : job.status === "assigned"
+                                ? "bg-blue-100 text-blue-700"
+                                : job.status === "closed"
+                                ? "bg-gray-300 text-black" 
+                                : "bg-white text-black" 
+                            }`}
+                            >
+                        {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                    </Badge>
                         </div>
                     </CardHeader>
                     <CardContent>

@@ -381,6 +381,13 @@ contract Chainskill{
         }
 
         DevAppliedProjectMapping[projectID] = allDevsThatApplied;
+        Applied[] storage devApplications = DevAppliedProjects[devAddr];
+        for (uint256 i = 0; i < devApplications.length; i++) {
+            if (devApplications[i].ListingUUID == projectID) {
+                devApplications[i].status = DevApplicationStatus.ACCEPTED;
+                break;
+            }
+    }
 
         if(!devApplied) revert DevAddrGivenDidnotAppliedToThisListing();
 
@@ -670,5 +677,38 @@ contract Chainskill{
         return result;
 
     }
+
+    function isProjectPaid(uint256 uuid) public view returns(uint256){
+        address addr = projectIdToCompanyMap[uuid];
+        Listing[] memory listings = CompanyListing[addr];
+        for(uint256 i=0;i<listings.length;i++){
+            if(listings[i].ListingUUID == uuid){
+                return uint256(listings[i].status);
+            }
+        }
+    }
+
+   function getCompanyActiveProjects(address companyAddr) public view returns (Listing[] memory) {
+    Listing[] storage listings = CompanyListing[companyAddr];
+    uint256 activeCount = 0;
+
+    for (uint256 i = 0; i < listings.length; i++) {
+        if (listings[i].status == ListingStatus.ASSIGNED) {
+            activeCount++;
+        }
+    }
+
+    Listing[] memory activeListings = new Listing[](activeCount);
+    uint256 idx = 0;
+
+    for (uint256 i = 0; i < listings.length; i++) {
+        if (listings[i].status == ListingStatus.ASSIGNED) {
+            activeListings[idx] = listings[i];
+            idx++;
+        }
+    }
+
+    return activeListings;
+}
 
 }

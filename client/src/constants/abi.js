@@ -1176,6 +1176,97 @@ const abi =[
     },
     {
         "type": "function",
+        "name": "getCompanyActiveProjects",
+        "inputs": [
+            {
+                "name": "companyAddr",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "tuple[]",
+                "internalType": "struct Chainskill.Listing[]",
+                "components": [
+                    {
+                        "name": "ListingUUID",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "topic",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "skillsReq",
+                        "type": "string[]",
+                        "internalType": "string[]"
+                    },
+                    {
+                        "name": "duration",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "budget",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "status",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.ListingStatus"
+                    },
+                    {
+                        "name": "devAddr",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "devFees",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "ListedOn",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "difficulty",
+                        "type": "uint8",
+                        "internalType": "enum Chainskill.ProjectDifficulty"
+                    },
+                    {
+                        "name": "applicantCount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "companyName",
+                        "type": "string",
+                        "internalType": "string"
+                    }
+                ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
         "name": "getCompanyListings",
         "inputs": [
             {
@@ -2007,6 +2098,25 @@ const abi =[
                         "internalType": "string"
                     }
                 ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "isProjectPaid",
+        "inputs": [
+            {
+                "name": "uuid",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
             }
         ],
         "stateMutability": "view"

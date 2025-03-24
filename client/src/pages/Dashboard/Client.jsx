@@ -30,9 +30,9 @@ export default function ClientDashboard() {
         companyName: result[1],
         description: result[7],
         industry: result[5],
-        jobsPosted: 0,
-        activeContracts: 0,
-        totalSpent: 0
+        jobsPosted: result[3],
+        activeContracts:result[3],
+        totalSpent: Number(result[4])/1e18,
       });
 
       console.log("Freelancer profile", companyProfile);
@@ -67,7 +67,7 @@ export default function ClientDashboard() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div className="space-y-1">
-                    <div className="text-sm text-emerald-300">Jobs Posted</div>
+                    <div className="text-sm text-emerald-300">Jobs Completed</div>
                     <div className="text-xl font-bold text-white">{companyProfile.jobsPosted}</div>
                   </div>
                   <div className="space-y-1">
@@ -101,17 +101,17 @@ export default function ClientDashboard() {
 
         <div className="space-y-6">
           <Tabs defaultValue="jobs">
-            <TabsList className="grid w-full grid-cols-3 bg-emerald-200">
+            <TabsList className="grid w-full grid-cols-2 bg-emerald-200">
               <TabsTrigger value="jobs">My Job Listings</TabsTrigger>
-              <TabsTrigger value="applications">Applications</TabsTrigger>
+              {/* <TabsTrigger value="applications">Applications</TabsTrigger> */}
               <TabsTrigger value="contracts">Active Contracts</TabsTrigger>
             </TabsList>
             <TabsContent value="jobs" className="mt-4">
               <ClientJobList />
             </TabsContent>
-            <TabsContent value="applications" className="mt-4">
+            {/* <TabsContent value="applications" className="mt-4">
               <ClientApplications />
-            </TabsContent>
+            </TabsContent> */}
             <TabsContent value="contracts" className="mt-4">
               <ClientActiveContracts />
             </TabsContent>

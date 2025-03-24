@@ -6,11 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { Badge } from "../components/ui/badge"
 import { Button } from "../components/ui/button"
 import { Star } from "lucide-react"
-import {getApplicationsToAProject , acceptApplication} from "../lib/company"
+import {getApplicationsToAProject , acceptApplication , releasePayment} from "../lib/company"
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/dashboard/Header"
-
+import { useLocation } from "react-router-dom"
 
 const normalizeApplications = (rawApplications) => {
     return rawApplications.map((Application) => ({
@@ -30,6 +30,9 @@ export default function ClientApplications() {
     const [applications, setApplications] = useState([])
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate();
+    const location = useLocation();
+  const { status } = location.state || {};
+
 
     useEffect(() => {
         const fetchApplications = async () => {
@@ -124,7 +127,21 @@ export default function ClientApplications() {
                             <Button variant="default" onClick={()=>acceptApplication(uuid,application.devAddr,application.charges)}>Accept</Button>
                         </CardFooter>
                     )}
+
+                    {application.status === "approved" && status!="closed" && (
+                        <CardFooter className="flex justify-end gap-2 pt-4">
+                            <Button variant="outline" onClick={()=>releasePayment(uuid,5,application.charges)}>Release Payment</Button>
+                    </CardFooter>
+                    )}
+
+                    {status=="closed" && (
+                        <CardFooter className="flex justify-end gap-2 pt-4">
+                            <Button variant="outline" >Paid</Button>
+                    </CardFooter>
+                    )}
+
                 </Card>
+                
             ))}
         </div>
     )

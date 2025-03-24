@@ -35,7 +35,7 @@ export default function FreelancerDashboard() {
         skills: result[3],
         completedJobs: Number(result[9], 10),
         rating: Number(result[7], 10),
-        earnings: ethers.formatUnits(result[8], 18),
+        earnings: Number(result[8]),
       });
 
       console.log("Freelancer profile", freelancerProfile);

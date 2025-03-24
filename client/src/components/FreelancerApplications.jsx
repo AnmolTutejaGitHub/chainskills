@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
 // import { getFreelancerApplications } from "@/lib/applications"
-import {getfreelancerApplications } from "../lib/freelancer";
+import {getfreelancerApplications,getIsProjectPaid } from "../lib/freelancer";
 
 const mockFreelancerApplications = [
     {
@@ -45,13 +45,14 @@ const mockFreelancerApplications = [
         AppliedAt: (new Date(Number(Application[5]) * 1000)).toLocaleDateString(),
         status: Application[4] === 0n ? "pending" : Application[4] === 1n ? "approved" : "rejected",
         companyName : Application[6],
-        coverLetter : Application[3]
+        coverLetter : Application[3],
     }));
   };
 
 export default function FreelancerApplications() {
   const [applications, setApplications] = useState([])
   const [loading, setLoading] = useState(true)
+  const [paymentStatuses, setPaymentStatuses] = useState({})
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -68,6 +69,27 @@ export default function FreelancerApplications() {
 
     fetchApplications()
   }, [])
+
+
+  useEffect(() => {
+    const fetchPaymentStatuses = async () => {
+      const statuses = {};
+      for (const application of applications) {
+        try {
+          const status = await getIsProjectPaid(application.id);
+          statuses[application.id] = status;
+        } catch (error) {
+          console.error(`Error fetching payment status for ${application.id}:`, error);
+          statuses[application.id] = "Error";
+        }
+      }
+      setPaymentStatuses(statuses);
+    };
+
+    if (applications.length > 0) {
+      fetchPaymentStatuses();
+    }
+  }, [applications]); 
 
   if (loading) {
     return <div className="flex justify-center p-8">Loading your applications...</div>
@@ -119,6 +141,11 @@ export default function FreelancerApplications() {
                 <div className="text-sm text-emerald-500 font-medium mb-1">Cover Letter:</div>
                 <p className="text-sm line-clamp-3 text-gray-200">{application.coverLetter}</p>
               </div>
+              <span className="text-white bg-[#49DE80] p-1 rounded-sm">
+                  {Number(paymentStatuses[application.id]) == 2
+                    ? "Paid"
+                    : ""}
+                </span>
             </div>
           </CardContent>
         </Card>
