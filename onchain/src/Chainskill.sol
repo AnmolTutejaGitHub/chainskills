@@ -380,6 +380,8 @@ contract Chainskill{
 
         }
 
+        DevAppliedProjectMapping[projectID] = allDevsThatApplied;
+
         if(!devApplied) revert DevAddrGivenDidnotAppliedToThisListing();
 
 

@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { Badge } from "../components/ui/badge"
 import { Button } from "../components/ui/button"
 import { Star } from "lucide-react"
-import {getApplicationsToAProject} from "../lib/company"
+import {getApplicationsToAProject , acceptApplication} from "../lib/company"
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/dashboard/Header"
@@ -121,7 +121,7 @@ export default function ClientApplications() {
                         <CardFooter className="flex justify-end gap-2 pt-4">
                             <Button variant="outline">Message</Button>
                             <Button variant="destructive">Decline</Button>
-                            <Button variant="default">Accept</Button>
+                            <Button variant="default" onClick={()=>acceptApplication(uuid,application.devAddr,application.charges)}>Accept</Button>
                         </CardFooter>
                     )}
                 </Card>
