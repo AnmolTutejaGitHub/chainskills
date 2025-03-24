@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ArrowRight, X, Wallet, Info, Layers, Users } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { checkIfUserExists } from "../lib/login";
-
 import { motion } from "motion/react";
+import { ColourfulText } from "../components/ui/colourful-text";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,11 +21,14 @@ export default function Home() {
 
       try {
         const userExists = await checkIfUserExists();
-        if (userExists === 0) { // Freelancer
+        if (userExists === 0) {
+          // Freelancer
           window.location.href = "/dashboard/freelancer";
-        } else if (userExists === 1) { // Client
+        } else if (userExists === 1) {
+          // Client
           window.location.href = "/dashboard/client";
-        } else if (userExists === 2) { // User does not exist
+        } else if (userExists === 2) {
+          // User does not exist
           if (userType === "client") {
             window.location.href = "/onboarding/client";
           } else if (userType === "freelancer") {
@@ -206,16 +209,10 @@ export default function Home() {
                 >
                   <div className="absolute inset-0 flex items-center justify-center text-white">
                     <div className="text-center ">
-                      <div
-                        className="text-4xl font-bold mb-2 drop-shadow-xl
-"
-                      >
-                        Web3
+                      <div className="text-7xl font-bold mb-2 drop-shadow-xl">
+                        <ColourfulText text="Web 3" />
                       </div>
-                      <div
-                        className="text-xl drop-shadow-xs
-"
-                      >
+                      <div className="text-3xl drop-shadow-xs">
                         Freelancing Revolution
                       </div>
                     </div>
@@ -494,6 +491,49 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      <footer class="bg rounded-lg shadow-sm bg-black m-4">
+        <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+          <div class="sm:flex sm:items-center sm:justify-between">
+            <a href="/" className="relative group flex items-center gap-2">
+              <Layers className="text-emerald-500 h-6 w-6" />
+              <span className="relative text-4xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-600 text-transparent bg-clip-text">
+                ChainSkills
+              </span>
+            </a>
+            <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
+              <li>
+                <a href="#" class="hover:underline me-4 md:me-6">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:underline me-4 md:me-6">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:underline me-4 md:me-6">
+                  Licensing
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:underline">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+          <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+          <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
+            © 2025{" "}
+            <a href="https://flowbite.com/" class="hover:underline">
+              ChainSkills™
+            </a>
+            . All Rights Reserved.
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
